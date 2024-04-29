@@ -1,0 +1,66 @@
+package team.gdsc.code2cv.core.security;
+
+import lombok.Builder;
+import lombok.Getter;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
+import team.gdsc.code2cv.core.jwt.JwtUser;
+import team.gdsc.code2cv.core.jwt.Role;
+
+import java.util.Collection;
+import java.util.Set;
+import java.util.stream.Collectors;
+
+@Getter
+@Builder
+public class JwtDetails implements UserDetails {
+    private Long userId;
+    private Role role;
+
+    public static JwtDetails from(JwtUser jwtUser) {
+        return JwtDetails.builder()
+                .userId(jwtUser.getId())
+                .role(jwtUser.getRole())
+                .build();
+    }
+
+
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        return role.getRoles()
+                .stream()
+                .map(role -> new SimpleGrantedAuthority(role.getValue()))
+                .collect(Collectors.toSet());
+    }
+
+    @Override
+    public String getPassword() {
+        return null;
+    }
+
+    @Override
+    public String getUsername() {
+        return null;
+    }
+
+    @Override
+    public boolean isAccountNonExpired() {
+        return false;
+    }
+
+    @Override
+    public boolean isAccountNonLocked() {
+        return false;
+    }
+
+    @Override
+    public boolean isCredentialsNonExpired() {
+        return false;
+    }
+
+    @Override
+    public boolean isEnabled() {
+        return false;
+    }
+}

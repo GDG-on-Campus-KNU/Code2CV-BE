@@ -5,6 +5,6 @@ import lombok.Builder;
 @Builder
 public record ErrorResponse(
         String debugMessage,
-        String error
+        ErrorCode code
 ) {
 }
