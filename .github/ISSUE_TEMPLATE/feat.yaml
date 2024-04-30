@@ -1,0 +1,22 @@
+name: ✨기능 제안
+description: 기능 제안 이슈를 생성합니다.
+
+title: "✨ Feat: "
+labels: 기능
+
+body:
+  - type: markdown
+    attributes:
+      value: |
+        ## 기능 제안
+
+        추가했으면 하는 기능을 설명해주세요.
+
+  - type: textarea
+    id: description
+    attributes:
+      label: 내용
+      description: "기능에 대해 자세히 설명해주세요."
+      placeholder: "사진과 함께 설명하면 더욱 좋습니다."
+    validations:
+      required: true
