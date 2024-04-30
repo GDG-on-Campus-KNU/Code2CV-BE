@@ -1,5 +1,5 @@
 name: 🐛버그 제보
-about: 버그 이슈를 생성합니다.
+description: 버그 이슈를 생성합니다.
 
 title: "🐛 Bug: "
 labels: bug
@@ -24,7 +24,6 @@ body:
         - Microsoft Edge
         - 기타 (상세 설명에 입력해주세요.)
       description: "버그가 발생한 브라우저를 입력해주세요."
-      placeholder: "e.g. Chrome 90, Firefox 88"
 
   - type: textarea
     id: description
