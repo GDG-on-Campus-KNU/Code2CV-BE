@@ -1,0 +1,49 @@
+name: 🐛버그 제보
+description: 버그 이슈를 생성합니다.
+
+title: "🐛 Bug: "
+labels: bug
+
+body:
+  - type: markdown
+    attributes:
+      value: |
+        ## 버그 제고
+
+        버그에 대해 명확하고 간결하게 설명해주세요.
+        
+  - type: dropdown
+    id: browsers
+    attributes:
+      label: Browsers
+      multiple: true
+      options:
+        - Chrome
+        - Firefox
+        - Safari
+        - Microsoft Edge
+        - 기타 (상세 설명에 입력해주세요.)
+      description: "버그가 발생한 브라우저를 입력해주세요."
+
+  - type: textarea
+    id: description
+    attributes:
+      label: Description
+      description: "버그에 대해 자세히 설명해주세요."
+      placeholder: "사진과 함께 설명하면 더욱 좋습니다."
+    validations:
+      required: true
+  
+  - type: textarea
+    id: reproduction
+    attributes:
+      label: Reproduction
+      description: "버그를 재현하는 방법을 설명해주세요."
+      placeholder: "사진과 함께 설명하면 더욱 좋습니다."
+
+  - type: input
+    id: os
+    attributes:
+      label: OS
+      description: "버그가 발생한 운영체제를 입력해주세요."
+      placeholder: "e.g. Windows11, macOS Big Sur, Ubuntu 20.04, etc..."
