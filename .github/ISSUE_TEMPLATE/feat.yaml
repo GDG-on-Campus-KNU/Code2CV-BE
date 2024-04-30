@@ -2,7 +2,7 @@ name: ✨기능 제안
 description: 기능 제안 이슈를 생성합니다.
 
 title: "✨ Feat: "
-labels: 기능
+labels: [":sparkles: 기능"]
 
 body:
   - type: markdown
