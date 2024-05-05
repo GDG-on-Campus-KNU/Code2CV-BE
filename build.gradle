@@ -60,7 +60,7 @@ checkstyle {
     maxWarnings = 0
     configFile = file("${rootDir}/config/checkstyle/naver-checkstyle-rules.xml")
     configProperties = ["suppressionFile": "${rootDir}/config/checkstyle/naver-checkstyle-suppressions.xml"]
-    toolVersion = "8.24"
+    toolVersion = "10.12.4"
 }
 
 tasks.named('test') {
