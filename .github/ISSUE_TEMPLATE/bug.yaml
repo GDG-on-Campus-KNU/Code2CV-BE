@@ -2,7 +2,7 @@ name: 🐛버그 제보
 description: 버그 이슈를 생성합니다.
 
 title: "🐛 Bug: "
-labels: bug
+labels: [":bug: 버그"]
 
 body:
   - type: markdown
