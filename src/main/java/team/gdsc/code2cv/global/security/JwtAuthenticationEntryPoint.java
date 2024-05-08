@@ -29,7 +29,7 @@ public class JwtAuthenticationEntryPoint implements AuthenticationEntryPoint {
 		AuthenticationException authException) throws IOException, ServletException {
 		log.debug("Token : {}", request.getHeader("Authorization"));
 		ErrorResponse fail = ErrorResponse.builder()
-			.code(ErrorCode.JWT)
+			.code(ErrorCode.JWT.name())
 			.debugMessage(authException.getMessage())
 			.build();
 		response.setStatus(401);

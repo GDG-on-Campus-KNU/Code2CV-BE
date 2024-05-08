@@ -29,7 +29,7 @@ public class JwtAccessDeniedHandler implements AccessDeniedHandler {
 		AccessDeniedException accessDeniedException) throws IOException, ServletException {
 		log.error("Token : {}", request.getHeader("Authorization"));
 		ErrorResponse fail = ErrorResponse.builder()
-			.code(ErrorCode.JWT)
+			.code(ErrorCode.JWT.name())
 			.debugMessage(accessDeniedException.getMessage())
 			.build();
 		response.setStatus(403);
