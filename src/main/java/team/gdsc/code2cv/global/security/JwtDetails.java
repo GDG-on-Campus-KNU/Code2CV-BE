@@ -1,4 +1,4 @@
-package team.gdsc.code2cv.core.security;
+package team.gdsc.code2cv.global.security;
 
 import java.util.Collection;
 import java.util.stream.Collectors;
@@ -9,8 +9,8 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 import lombok.Builder;
 import lombok.Getter;
-import team.gdsc.code2cv.core.jwt.JwtUser;
-import team.gdsc.code2cv.core.jwt.Role;
+import team.gdsc.code2cv.global.jwt.JwtUser;
+import team.gdsc.code2cv.global.jwt.Role;
 
 @Getter
 @Builder

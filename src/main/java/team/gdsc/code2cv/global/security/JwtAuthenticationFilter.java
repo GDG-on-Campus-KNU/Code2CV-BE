@@ -1,4 +1,4 @@
-package team.gdsc.code2cv.core.security;
+package team.gdsc.code2cv.global.security;
 
 import java.io.IOException;
 
@@ -14,8 +14,8 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import team.gdsc.code2cv.core.jwt.JwtProvider;
-import team.gdsc.code2cv.core.jwt.JwtUser;
+import team.gdsc.code2cv.global.jwt.JwtProvider;
+import team.gdsc.code2cv.global.jwt.JwtUser;
 
 @RequiredArgsConstructor
 @Slf4j
