@@ -1,10 +1,10 @@
-package team.gdsc.code2cv.core.controller.error;
+package team.gdsc.code2cv.global.controller.error;
 
 import lombok.Builder;
 
 @Builder
 public record ErrorResponse(
 	String debugMessage,
-	ErrorCode code
+	String code
 ) {
 }

@@ -1,4 +1,4 @@
-package team.gdsc.code2cv.core.security;
+package team.gdsc.code2cv.global.security;
 
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -15,8 +15,8 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import team.gdsc.code2cv.core.controller.error.ErrorCode;
-import team.gdsc.code2cv.core.controller.error.ErrorResponse;
+import team.gdsc.code2cv.global.controller.error.ErrorCode;
+import team.gdsc.code2cv.global.controller.error.ErrorResponse;
 
 @Slf4j
 @Component

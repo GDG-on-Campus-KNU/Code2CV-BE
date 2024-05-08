@@ -1,4 +1,4 @@
-package team.gdsc.code2cv.core.security;
+package team.gdsc.code2cv.global.security;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

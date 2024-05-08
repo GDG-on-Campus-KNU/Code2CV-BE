@@ -1,4 +1,4 @@
-package team.gdsc.code2cv.core.dto.response;
+package team.gdsc.code2cv.global.response;
 
 import java.util.List;
 import java.util.function.Function;

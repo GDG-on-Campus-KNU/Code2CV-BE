@@ -1,4 +1,4 @@
-package team.gdsc.code2cv.core.controller.config;
+package team.gdsc.code2cv.global.controller.config;
 
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
