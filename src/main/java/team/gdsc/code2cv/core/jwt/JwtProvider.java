@@ -19,9 +19,9 @@ public class JwtProvider {
 	private String secret;
 
 	@Value("${jwt.access-token-expire-time}")
-	private long ACCESS_TOKEN_EXPIRE_TIME;
+	private long accessTokenExpireTime;
 	@Value("${jwt.refresh-token-expire-time}")
-	private long REFRESH_TOKEN_EXPIRE_TIME;
+	private long refreshTokenExpireTime;
 	private static final String ROLE = "role";
 	private static final String IS_ACCESS_TOKEN = "isAccessToken";
 	private static final String HEADER_PREFIX = "Bearer ";
@@ -97,7 +97,7 @@ public class JwtProvider {
 	 */
 	private String generateToken(JwtUser jwtUser, boolean isAccessToken) {
 		Key secretKey = generateKey();
-		long expireTime = isAccessToken ? ACCESS_TOKEN_EXPIRE_TIME : REFRESH_TOKEN_EXPIRE_TIME;
+		long expireTime = isAccessToken ? accessTokenExpireTime : refreshTokenExpireTime;
 		Date expireDate = new Date(System.currentTimeMillis() + expireTime);
 		return Jwts.builder()
 			.signWith(secretKey)
