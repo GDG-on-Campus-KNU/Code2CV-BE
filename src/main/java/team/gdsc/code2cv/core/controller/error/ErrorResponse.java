@@ -4,7 +4,7 @@ import lombok.Builder;
 
 @Builder
 public record ErrorResponse(
-        String debugMessage,
-        ErrorCode code
+	String debugMessage,
+	ErrorCode code
 ) {
 }
