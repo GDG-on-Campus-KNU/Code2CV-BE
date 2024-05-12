@@ -7,8 +7,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest
-class GithubRepositoryClientImplTest {
-	@Autowired private GithubRepositoryClientImpl githubRepositoryClient;
+class GithubRepositoryClientTest {
+	@Autowired private GithubRepositoryClient githubRepositoryClient;
 	private final String token = null;
 	private final String owner = null;
 	private final String repo = null;
@@ -17,7 +17,7 @@ class GithubRepositoryClientImplTest {
 	@Test
 	void getRepositoryList() {
 		if(token != null) {
-			var list = githubRepositoryClient.getRepositoryList(token);
+			var list = githubRepositoryClient.getAllRepositoriesInfo(token);
 			list.forEach(System.out::println);
 		}
 	}
@@ -26,8 +26,7 @@ class GithubRepositoryClientImplTest {
 	@Test
 	void getCommitList() {
 		if(token != null) {
-			var list = githubRepositoryClient.getCommitList(token, owner, repo);
-			list.forEach(System.out::println);
+
 		}
 	}
 }
