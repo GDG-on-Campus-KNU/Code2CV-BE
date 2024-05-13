@@ -17,11 +17,11 @@ public interface GithubRestApiClient {
 	ResponseEntity<List<GithubRepositoryInfoModel>> getRepositoryList(
 		@RequestHeader("Authorization") String token, // Bearer token
 		@RequestParam(value = "page", defaultValue = "1") int page, // 1, 2, 3, ...
-		@RequestParam(value = "per_page",defaultValue = "30") int perPage,
+		@RequestParam(value = "per_page", defaultValue = "30") int perPage,
 		@RequestParam(value = "sort", defaultValue = "updated") String sort, // created, updated, pushed, full_name
 		@RequestParam(value = "since", required = false) String since,
 		@RequestParam(value = "before", required = false) String before,
 		@RequestParam(value = "visibility", defaultValue = "public") String visibility,
-		@RequestParam(value = "affiliation",defaultValue = "owner,collaborator") String affiliation
+		@RequestParam(value = "affiliation", defaultValue = "owner,collaborator") String affiliation
 	);
 }

@@ -1,8 +1,12 @@
 package team.gdsc.code2cv.core.utils;
 
-import jakarta.validation.*;
-
 import java.util.Set;
+
+import jakarta.validation.ConstraintViolation;
+import jakarta.validation.ConstraintViolationException;
+import jakarta.validation.Validation;
+import jakarta.validation.Validator;
+import jakarta.validation.ValidatorFactory;
 
 /**
  * 검증이 필요한 객체에 대한 검증을 수행하는 추상 클래스 <br>
@@ -12,17 +16,17 @@ import java.util.Set;
  * @param <T> 검증이 필요한 객체의 타입
  */
 public abstract class SelfValidating<T> {
-    private final Validator validator;
+	private final Validator validator;
 
-    protected SelfValidating() {
-        ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
-        validator = factory.getValidator();
-    }
+	protected SelfValidating() {
+		ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
+		validator = factory.getValidator();
+	}
 
-    protected void validateSelf() {
-        Set<ConstraintViolation<T>> violations = validator.validate((T) this);
-        if (!violations.isEmpty()) {
-            throw new ConstraintViolationException(violations);
-        }
-    }
+	protected void validateSelf() {
+		Set<ConstraintViolation<T>> violations = validator.validate((T)this);
+		if (!violations.isEmpty()) {
+			throw new ConstraintViolationException(violations);
+		}
+	}
 }

@@ -1,6 +1,6 @@
 package team.gdsc.code2cv.core.exception;
 
-public class TokenExpiredException extends RuntimeException{
+public class TokenExpiredException extends RuntimeException {
 	public TokenExpiredException(String message) {
 		super(message);
 	}

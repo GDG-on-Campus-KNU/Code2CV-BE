@@ -1,6 +1,6 @@
 package team.gdsc.code2cv.core.exception;
 
-public class ExternalServerCommunicationException extends RuntimeException{
+public class ExternalServerCommunicationException extends RuntimeException {
 	public ExternalServerCommunicationException(String message) {
 		super(message);
 	}
