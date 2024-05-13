@@ -7,7 +7,7 @@ import org.springframework.http.HttpEntity;
 import org.springframework.stereotype.Repository;
 
 import lombok.RequiredArgsConstructor;
-import team.gdsc.code2cv.feature.project.dto.response.GithubRepositoryInfoModel;
+import team.gdsc.code2cv.global.client.github.response.GithubRepositoryInfoModel;
 import team.gdsc.code2cv.global.client.github.GithubRestApiClient;
 
 /**

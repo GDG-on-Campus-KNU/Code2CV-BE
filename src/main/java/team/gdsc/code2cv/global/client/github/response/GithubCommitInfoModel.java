@@ -1,4 +1,4 @@
-package team.gdsc.code2cv.feature.project.dto.response;
+package team.gdsc.code2cv.global.client.github.response;
 
 import java.time.LocalDateTime;
 import java.util.List;

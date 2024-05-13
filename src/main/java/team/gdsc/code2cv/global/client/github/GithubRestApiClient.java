@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.service.annotation.GetExchange;
 import org.springframework.web.service.annotation.HttpExchange;
 
-import team.gdsc.code2cv.feature.project.dto.response.GithubRepositoryInfoModel;
+import team.gdsc.code2cv.global.client.github.response.GithubRepositoryInfoModel;
 
 @HttpExchange
 public interface GithubRestApiClient {
