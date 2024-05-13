@@ -3,6 +3,7 @@ package team.gdsc.code2cv.feature.project.repository;
 import java.util.List;
 import java.util.stream.Stream;
 
+import org.springframework.http.HttpEntity;
 import org.springframework.stereotype.Repository;
 
 import lombok.RequiredArgsConstructor;
@@ -41,6 +42,7 @@ public class GithubRepositoryClient {
 				null, null,
 				"public", "owner,collaborator"
 			))
+			.map(HttpEntity::getBody)
 			.takeWhile(response -> !response.isEmpty());
 	}
 
