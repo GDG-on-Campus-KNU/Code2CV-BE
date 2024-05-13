@@ -12,7 +12,9 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 import io.jsonwebtoken.JwtException;
 import lombok.extern.slf4j.Slf4j;
+import team.gdsc.code2cv.core.exception.ExternalServerCommunicationException;
 import team.gdsc.code2cv.core.exception.ResourceNotFoundException;
+import team.gdsc.code2cv.core.exception.TokenExpiredException;
 
 @RestControllerAdvice
 @Slf4j
@@ -57,6 +59,26 @@ public class ApiExceptionControllerAdvice {
 		return ErrorResponse.builder()
 			.debugMessage(ex.getMessage())
 			.code("JWT")
+			.build();
+	}
+
+	@ExceptionHandler
+	@ResponseStatus(HttpStatus.UNAUTHORIZED)
+	public ErrorResponse tokenExpiredExceptionHandler(TokenExpiredException ex) {
+		log.error("TokenExpiredException : {}", ex.getMessage());
+		return ErrorResponse.builder()
+			.debugMessage(ex.getMessage())
+			.code("JWT")
+			.build();
+	}
+
+	@ExceptionHandler
+	@ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+	public ErrorResponse exceptionHandler(ExternalServerCommunicationException ex) {
+		log.error("Exception : {}", ex.getMessage());
+		return ErrorResponse.builder()
+			.debugMessage(ex.getMessage())
+			.code("ExternalServerCommunicationException")
 			.build();
 	}
 
