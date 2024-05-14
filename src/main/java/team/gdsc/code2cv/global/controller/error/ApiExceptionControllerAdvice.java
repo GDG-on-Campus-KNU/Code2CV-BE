@@ -21,10 +21,10 @@ import team.gdsc.code2cv.core.exception.TokenExpiredException;
 public class ApiExceptionControllerAdvice {
 	@ExceptionHandler
 	@ResponseStatus(HttpStatus.BAD_REQUEST)
-	public ErrorResponse illegalArgumentExceptionHandler(IllegalArgumentException error) {
-		log.debug("IllegalArgumentException : {}", error.getMessage());
+	public ErrorResponse illegalArgumentExceptionHandler(IllegalArgumentException ex) {
+		log.debug("IllegalArgumentException : {}", ex.getMessage());
 		return ErrorResponse.builder()
-			.debugMessage(error.getMessage())
+			.debugMessage(ex.getMessage())
 			.code("IllegalArgumentException")
 			.build();
 	}
