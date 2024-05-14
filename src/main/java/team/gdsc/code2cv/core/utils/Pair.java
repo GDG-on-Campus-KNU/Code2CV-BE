@@ -1,9 +1,7 @@
 package team.gdsc.code2cv.core.utils;
 
-
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
-
 
 /**
  * 두 개의 값을 가지는 Pair 클래스
@@ -13,6 +11,6 @@ import lombok.RequiredArgsConstructor;
 @Getter
 @RequiredArgsConstructor
 public class Pair<First, Second> {
-    private final First first;
-    private final Second second;
+	private final First first;
+	private final Second second;
 }
