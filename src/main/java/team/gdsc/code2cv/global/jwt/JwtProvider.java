@@ -55,7 +55,7 @@ public class JwtProvider {
 		try {
 			Claims claims = extractClaims(rawToken);
 			return !claims.getExpiration().before(new Date());
-		} catch (Exception e) {	//JwtException, ExpiredJwtException, NullPointerException
+		} catch (Exception e) {    //JwtException, ExpiredJwtException, NullPointerException
 			return false;
 		}
 	}

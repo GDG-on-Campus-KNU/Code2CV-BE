@@ -7,8 +7,8 @@ import org.springframework.http.HttpEntity;
 import org.springframework.stereotype.Repository;
 
 import lombok.RequiredArgsConstructor;
-import team.gdsc.code2cv.global.client.github.response.GithubRepositoryInfoModel;
 import team.gdsc.code2cv.global.client.github.GithubRestApiClient;
+import team.gdsc.code2cv.global.client.github.response.GithubRepositoryInfoModel;
 
 /**
  * Github API를 호출하여 GithubRepository 정보를 가져오는 클래스
