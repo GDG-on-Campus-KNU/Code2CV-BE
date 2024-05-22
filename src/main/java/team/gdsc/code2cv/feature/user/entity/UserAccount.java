@@ -2,6 +2,8 @@ package team.gdsc.code2cv.feature.user.entity;
 
 import java.time.LocalDateTime;
 
+import org.springframework.data.annotation.CreatedDate;
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
@@ -12,6 +14,7 @@ import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import team.gdsc.code2cv.feature.user.domain.UserAccountCreate;
 
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -33,28 +36,24 @@ public class UserAccount {
 
 	private String githubNickname;
 
-	private LocalDateTime createdAt; // JPA data type LocalDateTime 추가 필요
+	@CreatedDate
+	private LocalDateTime createdAt;
 
 	@Builder
-	public UserAccount(UserRole role, String vendorEmail, VendorName vendorName, String githubToken,
-		String githubNickname, LocalDateTime createdAt) {
+	private UserAccount(UserRole role, String vendorEmail, VendorName vendorName, String githubToken,
+		String githubNickname) {
 		this.role = role;
 		this.vendorEmail = vendorEmail;
 		this.vendorName = vendorName;
 		this.githubToken = githubToken;
 		this.githubNickname = githubNickname;
-		this.createdAt = createdAt;
 	}
 
-	public static UserAccount create(UserRole role, String vendorEmail, VendorName vendorName, String githubToken,
-		String githubNickname, LocalDateTime createdAt) {
+	public static UserAccount create(UserAccountCreate userAccountCreate) {
 		return UserAccount.builder()
-			.role(role)
-			.vendorEmail(vendorEmail)
-			.vendorName(vendorName)
-			.githubToken(githubToken)
-			.githubNickname(githubNickname)
-			.createdAt(createdAt)
+			.role(UserRole.NONE)
+			.vendorEmail(userAccountCreate.getVendorEmail())
+			.vendorName(VendorName.valueOf(userAccountCreate.getVendorName()))
 			.build();
 	}
 }
