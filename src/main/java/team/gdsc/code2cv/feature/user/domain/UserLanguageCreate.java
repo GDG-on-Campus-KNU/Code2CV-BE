@@ -2,12 +2,16 @@ package team.gdsc.code2cv.feature.user.domain;
 
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.Size;
+import lombok.Builder;
+import lombok.Getter;
 import team.gdsc.code2cv.core.utils.SelfValidating;
 import team.gdsc.code2cv.feature.user.entity.LanguageType;
 
+@Getter
+@Builder
 public class UserLanguageCreate extends SelfValidating<UserLanguageCreate> {
 
-	private final LanguageType languageType; // Lang
+	private final LanguageType languageType;
 
 	@Min(0)
 	private final Long rowsAdded;
