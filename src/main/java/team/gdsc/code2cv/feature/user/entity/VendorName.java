@@ -14,4 +14,14 @@ public enum VendorName {
 	public String getName() {
 		return name;
 	}
+
+	public static boolean valid(String name) {
+		for (VendorName vendorName : VendorName.values()) {
+			if (vendorName.name.equals(name)) {
+				return true;
+			}
+		}
+		return false;
+	}
+
 }
