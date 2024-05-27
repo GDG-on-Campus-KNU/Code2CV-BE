@@ -25,9 +25,9 @@ public class UserAccount {
 	private long id;
 
 	@Enumerated(EnumType.STRING)
-	private UserRole role;
+	private Role role;
 
-	private String vendorEmail;
+	private String userToken;
 
 	@Enumerated(EnumType.STRING)
 	private VendorName vendorName;
@@ -40,10 +40,10 @@ public class UserAccount {
 	private LocalDateTime createdAt;
 
 	@Builder
-	private UserAccount(UserRole role, String vendorEmail, VendorName vendorName, String githubToken,
+	private UserAccount(Role role, String userToken, VendorName vendorName, String githubToken,
 		String githubNickname) {
 		this.role = role;
-		this.vendorEmail = vendorEmail;
+		this.userToken = userToken;
 		this.vendorName = vendorName;
 		this.githubToken = githubToken;
 		this.githubNickname = githubNickname;
@@ -51,9 +51,8 @@ public class UserAccount {
 
 	public static UserAccount create(UserAccountCreate userAccountCreate) {
 		return UserAccount.builder()
-			.role(UserRole.NONE)
-			.vendorEmail(userAccountCreate.getVendorEmail())
-			.vendorName(VendorName.valueOf(userAccountCreate.getVendorName()))
+			.role(Role.ROLE_USER)
+			.userToken(userAccountCreate.getUserToken())
 			.build();
 	}
 }

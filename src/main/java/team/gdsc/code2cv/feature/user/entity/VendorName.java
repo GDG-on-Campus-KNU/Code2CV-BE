@@ -1,9 +1,9 @@
 package team.gdsc.code2cv.feature.user.entity;
 
 public enum VendorName {
-	GITHUB("github"),
-	GOOGLE("google"),
-	KAKAO("kakao");
+	GITHUB("Github"),
+	GOOGLE("Google"),
+	KAKAO("Kakao");
 
 	private final String name;
 

@@ -10,9 +10,9 @@ import jakarta.validation.Constraint;
 
 @Target({FIELD})
 @Retention(RetentionPolicy.RUNTIME)
-@Constraint(validatedBy = VendorNameValidator.class)
-public @interface ValidVendorName {
-	String message() default "VendorName이 유효하지 않습니다.";
+@Constraint(validatedBy = UserTokenValidator.class)
+public @interface ValidUserToken {
+	String message() default "유효하지 않은 VendorName입니다.";
 
 	Class<?>[] groups() default {};
 
