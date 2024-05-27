@@ -9,8 +9,8 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 import lombok.Builder;
 import lombok.Getter;
+import team.gdsc.code2cv.feature.user.entity.Role;
 import team.gdsc.code2cv.global.jwt.JwtUser;
-import team.gdsc.code2cv.global.jwt.Role;
 
 @Getter
 @Builder
