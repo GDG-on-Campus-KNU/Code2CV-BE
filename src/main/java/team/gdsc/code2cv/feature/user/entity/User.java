@@ -34,6 +34,10 @@ public class User {
 	@Enumerated(EnumType.STRING)
 	private Role role;
 
+	private String email; // 이메일 로그인 시 사용
+
+	private String password; // 이메일 로그인 시 사용
+
 
 
 	@CreatedDate
