@@ -1,9 +1,5 @@
 package team.gdsc.code2cv.feature.user.entity;
 
-import java.time.LocalDateTime;
-
-import org.springframework.data.annotation.CreatedDate;
-
 import jakarta.persistence.Embedded;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -21,6 +17,7 @@ import team.gdsc.code2cv.feature.user.domain.GithubAccount;
 import team.gdsc.code2cv.feature.user.domain.Role;
 import team.gdsc.code2cv.feature.user.domain.UserCommand;
 import team.gdsc.code2cv.feature.user.domain.UserProfile;
+import team.gdsc.code2cv.global.repository.BaseTimeEntity;
 
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -28,7 +25,7 @@ import team.gdsc.code2cv.feature.user.domain.UserProfile;
 @Table(name = "users") // 예약어 회피
 @AllArgsConstructor
 @Builder
-public class User {
+public class User extends BaseTimeEntity {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
@@ -40,9 +37,6 @@ public class User {
 
 	private String password; // 이메일 로그인 시 사용
 
-
-	@CreatedDate
-	private LocalDateTime createdAt;
 
 	@Embedded
 	private GithubAccount githubAccount;
