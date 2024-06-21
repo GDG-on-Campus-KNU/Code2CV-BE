@@ -52,7 +52,7 @@ public class AuthService {
 	 * 액세스 토큰 재발급
 	 */
 	public AuthRes.AccessTokenResponse refreshAccessToken(String rawToken) {
-		jwtProvider.validateToken(rawToken);
+		jwtProvider.validateToken(rawToken, false);
 		String accessToken = jwtProvider.reissueAccessToken(rawToken);
 		return AuthRes.AccessTokenResponse.of(accessToken);
 	}

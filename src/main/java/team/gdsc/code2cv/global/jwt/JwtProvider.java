@@ -54,9 +54,12 @@ public class JwtProvider implements InitializingBean {
 	 * Jwt가 유효한지 검사하는 메서드.
 	 * 만료시간, 토큰의 유효성을 검사한다.
 	 */
-	public boolean validateToken(String rawToken) {
+	public boolean validateToken(String rawToken, boolean isAccessToken) {
 		try {
 			Claims claims = extractClaims(rawToken);
+			if (claims.get(IS_ACCESS_TOKEN, Boolean.class) != isAccessToken) {
+				return false;
+			}
 			return !claims.getExpiration().before(new Date());
 		} catch (Exception e) {    //JwtException, ExpiredJwtException, NullPointerException
 			return false;
@@ -103,7 +106,7 @@ public class JwtProvider implements InitializingBean {
 		Date expireDate = new Date(System.currentTimeMillis() + expireTime);
 		return Jwts.builder()
 			.signWith(secretKey)
-			.claim(ROLE, jwtUser.getRole().getValue())
+			.claim(ROLE, jwtUser.getRole())
 			.claim(IS_ACCESS_TOKEN, isAccessToken)
 			.setSubject(jwtUser.getId().toString())
 			.setExpiration(expireDate)
