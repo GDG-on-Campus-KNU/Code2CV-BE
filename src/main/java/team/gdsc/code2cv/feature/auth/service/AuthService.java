@@ -1,6 +1,5 @@
 package team.gdsc.code2cv.feature.auth.service;
 
-import org.apache.commons.lang3.NotImplementedException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -9,7 +8,10 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import team.gdsc.code2cv.feature.auth.dto.AuthReq;
 import team.gdsc.code2cv.feature.auth.dto.AuthRes;
-import team.gdsc.code2cv.feature.user.dto.UserRes;
+import team.gdsc.code2cv.feature.auth.repository.GithubClient;
+import team.gdsc.code2cv.feature.auth.repository.GithubRes;
+import team.gdsc.code2cv.feature.user.domain.UserCommand;
+import team.gdsc.code2cv.feature.user.domain.GithubAccount;
 import team.gdsc.code2cv.feature.user.entity.User;
 import team.gdsc.code2cv.feature.user.repository.UserRepository;
 import team.gdsc.code2cv.global.jwt.JwtProvider;
@@ -23,18 +25,61 @@ public class AuthService {
 	private final JwtProvider jwtProvider;
 	private final UserRepository userRepository;
 	private final BCryptPasswordEncoder bCryptPasswordEncoder;
+	private final GithubClient githubClient;
 
+	/**
+	 * 깃허브 로그인 또는 회원가입
+	 * 1. 깃허브로부터 받은 code와 state를 이용하여 깃허브 access token을 받아온다.
+	 * 2. 깃허브 access token을 이용하여 깃허브 계정 정보를 받아온다.
+	 * 3. 깃허브 계정 정보를 이용하여 회원가입 또는 로그인을 진행한다.
+	 */
 	public AuthRes.LoginResponse githubLoginOrSignUp(AuthReq.GithubLoginRequest req) {
-		throw new NotImplementedException("아직 구현되지 않았습니다.");
+		String githubAccessToken
+			= githubClient.getGithubAccessToken(req.code(), req.state());
+
+		GithubAccount githubAccount = githubClient
+			.getGithubAccountResponse(githubAccessToken)
+			.toDomain(githubAccessToken);
+
+		User user = userRepository.findByGithubAccountGithubId(githubAccount.getGithubId())
+			.orElseGet(() -> signUp(githubAccount));
+
+		JwtToken jwtToken = createToken(user);
+		return AuthRes.LoginResponse.from(jwtToken, user);
 	}
 
+	/**
+	 * 액세스 토큰 재발급
+	 */
 	public AuthRes.AccessTokenResponse refreshAccessToken(String rawToken) {
+		jwtProvider.validateToken(rawToken);
 		String accessToken = jwtProvider.reissueAccessToken(rawToken);
 		return AuthRes.AccessTokenResponse.of(accessToken);
 	}
 
+	/**
+	 * 이메일 회원가입
+	 */
 	public AuthRes.LoginResponse emailSignUp(AuthReq.EmailSignUpRequest req) {
-		throw new NotImplementedException("아직 구현되지 않았습니다.");
+		if (userRepository.existsByEmail(req.email())) {
+			throw new IllegalArgumentException("이미 존재하는 이메일입니다.");
+		}
+		GithubAccount githubAccount = githubClient
+			.getGithubAccountResponse(req.gitToken())
+			.toDomain(req.gitToken());
+
+		UserCommand.CreateByEmail command = UserCommand.CreateByEmail.builder()
+			.email(req.email())
+			.password(bCryptPasswordEncoder.encode(req.password()))
+			.githubAccount(githubAccount)
+			.build();
+
+		User user = User.create(command);
+
+		userRepository.save(user);
+
+		JwtToken jwtToken = createToken(user);
+		return AuthRes.LoginResponse.from(jwtToken, user);
 	}
 
 	@Transactional(readOnly = true)
@@ -52,6 +97,14 @@ public class AuthService {
 	private JwtToken createToken(User user) {
 		JwtUser jwtUser = JwtUser.of(user.getId(), user.getRole());
 		return jwtProvider.createToken(jwtUser);
+	}
+
+	private User signUp(GithubAccount githubAccount) {
+		UserCommand.CreateByGithub command = UserCommand.CreateByGithub.builder()
+			.githubAccount(githubAccount)
+			.build();
+		User user = User.create(command);
+		return userRepository.save(user);
 	}
 
 }

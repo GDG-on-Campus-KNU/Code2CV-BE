@@ -1,5 +1,6 @@
-package team.gdsc.code2cv.feature.user.entity;
+package team.gdsc.code2cv.feature.user.domain;
 
+import java.time.LocalDateTime;
 import java.time.ZonedDateTime;
 
 import jakarta.persistence.Embeddable;
@@ -23,6 +24,6 @@ public class GithubAccount {
 	private Integer githubPublicReposCount;
 	private Integer githubFollowersCount;
 	private Integer githubFollowingCount;
-	private ZonedDateTime githubCreatedAt;
-	private ZonedDateTime githubUpdatedAt;
+	private LocalDateTime githubCreatedAt;
+	private LocalDateTime githubUpdatedAt;
 }

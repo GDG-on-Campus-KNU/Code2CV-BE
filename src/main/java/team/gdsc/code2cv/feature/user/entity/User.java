@@ -2,7 +2,6 @@ package team.gdsc.code2cv.feature.user.entity;
 
 import java.time.LocalDateTime;
 
-import org.apache.commons.lang3.NotImplementedException;
 import org.springframework.data.annotation.CreatedDate;
 
 import jakarta.persistence.Embedded;
@@ -18,7 +17,10 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import team.gdsc.code2cv.feature.user.domain.UserCreate;
+import team.gdsc.code2cv.feature.user.domain.GithubAccount;
+import team.gdsc.code2cv.feature.user.domain.Role;
+import team.gdsc.code2cv.feature.user.domain.UserCommand;
+import team.gdsc.code2cv.feature.user.domain.UserProfile;
 
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -39,7 +41,6 @@ public class User {
 	private String password; // 이메일 로그인 시 사용
 
 
-
 	@CreatedDate
 	private LocalDateTime createdAt;
 
@@ -54,7 +55,19 @@ public class User {
 	}
 
 
-	public static User create(UserCreate userCreate) {
-		throw new NotImplementedException("Not implemented yet");
+	public static User create(UserCommand.CreateByGithub command) {
+		return User.builder()
+			.role(Role.USER)
+			.githubAccount(command.getGithubAccount())
+			.build();
+	}
+
+	public static User create(UserCommand.CreateByEmail command) {
+		return User.builder()
+			.role(Role.USER)
+			.email(command.getEmail())
+			.password(command.getPassword())
+			.githubAccount(command.getGithubAccount())
+			.build();
 	}
 }

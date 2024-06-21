@@ -13,7 +13,7 @@ import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import team.gdsc.code2cv.core.exception.NotAuthorizationException;
-import team.gdsc.code2cv.feature.user.entity.Role;
+import team.gdsc.code2cv.feature.user.domain.Role;
 
 @Component
 public class JwtProvider implements InitializingBean {
@@ -57,7 +57,6 @@ public class JwtProvider implements InitializingBean {
 	public boolean validateToken(String rawToken) {
 		try {
 			Claims claims = extractClaims(rawToken);
-			System.out.println("rawToken claims:" + claims.toString());
 			return !claims.getExpiration().before(new Date());
 		} catch (Exception e) {    //JwtException, ExpiredJwtException, NullPointerException
 			return false;
@@ -86,7 +85,6 @@ public class JwtProvider implements InitializingBean {
 	 */
 	public JwtUser getJwtUser(String rawToken) {
 		Claims claims = extractClaims(rawToken);
-		System.out.println("clamis:" + claims.toString());
 		return claimsToJwtUser(claims);
 	}
 

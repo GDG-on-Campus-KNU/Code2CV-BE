@@ -1,6 +1,9 @@
 package team.gdsc.code2cv.feature.auth.repository;
 
 import java.util.Arrays;
+import java.util.Optional;
+
+import javax.swing.text.html.Option;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatusCode;
@@ -66,14 +69,10 @@ public class GithubClient {
 	 * Github API로부터 사용자 정보를 받아온다.
 	 */
 	public GithubRes.GithubAccountDto getGithubAccountResponse(String githubAccessToken) {
-		GithubRes.GithubAccountDto response = restClient.get()
+		return restClient.get()
 			.uri("https://api.github.com/user")
 			.header("Authorization", "token " + githubAccessToken)
 			.retrieve()
 			.body(GithubRes.GithubAccountDto.class);
-		if (response == null) {
-			throw new ExternalServerCommunicationException("Github API 호출 중 에러가 발생했습니다.");
-		}
-		return response;
 	}
 }

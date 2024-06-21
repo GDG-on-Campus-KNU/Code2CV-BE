@@ -1,4 +1,4 @@
-package team.gdsc.code2cv.feature.user.entity;
+package team.gdsc.code2cv.feature.user.domain;
 
 import java.util.Set;
 
@@ -8,8 +8,8 @@ import lombok.RequiredArgsConstructor;
 @Getter
 @RequiredArgsConstructor
 public enum Role {
-	ROLE_USER("ROLE_USER"),
-	ROLE_ADMIN("ROLE_ADMIN"),
+	USER("ROLE_USER"),
+	ADMIN("ROLE_ADMIN"),
 	NONE("ROLE_NONE");
 
 	private final String value;
@@ -17,8 +17,8 @@ public enum Role {
 	public Set<Role> getRoles() {
 		return switch (this) {
 			case NONE -> Set.of(Role.NONE);
-			case ROLE_USER -> Set.of(Role.ROLE_USER);
-			case ROLE_ADMIN -> Set.of(Role.ROLE_USER, Role.ROLE_ADMIN);
+			case USER -> Set.of(Role.USER);
+			case ADMIN -> Set.of(Role.USER, Role.ADMIN);
 		};
 	}
 }

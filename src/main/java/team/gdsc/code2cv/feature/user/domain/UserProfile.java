@@ -1,4 +1,4 @@
-package team.gdsc.code2cv.feature.user.entity;
+package team.gdsc.code2cv.feature.user.domain;
 
 import jakarta.persistence.Embeddable;
 import lombok.Getter;
