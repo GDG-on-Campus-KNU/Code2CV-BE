@@ -9,4 +9,8 @@ import team.gdsc.code2cv.feature.user.entity.User;
 
 public interface UserRepository extends JpaRepository<User, Long> {
 	Optional<User> findByEmail(String email);
+
+	boolean existsByEmail(String email);
+
+	Optional<User> findByGithubAccountGithubId(String githubId);
 }
