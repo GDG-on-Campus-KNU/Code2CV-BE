@@ -9,9 +9,8 @@ import lombok.extern.slf4j.Slf4j;
 import team.gdsc.code2cv.feature.auth.dto.AuthReq;
 import team.gdsc.code2cv.feature.auth.dto.AuthRes;
 import team.gdsc.code2cv.feature.auth.repository.GithubClient;
-import team.gdsc.code2cv.feature.auth.repository.GithubRes;
-import team.gdsc.code2cv.feature.user.domain.UserCommand;
 import team.gdsc.code2cv.feature.user.domain.GithubAccount;
+import team.gdsc.code2cv.feature.user.domain.UserCommand;
 import team.gdsc.code2cv.feature.user.entity.User;
 import team.gdsc.code2cv.feature.user.repository.UserRepository;
 import team.gdsc.code2cv.global.jwt.JwtProvider;
@@ -34,12 +33,9 @@ public class AuthService {
 	 * 3. 깃허브 계정 정보를 이용하여 회원가입 또는 로그인을 진행한다.
 	 */
 	public AuthRes.LoginResponse githubLoginOrSignUp(AuthReq.GithubLoginRequest req) {
-		String githubAccessToken
-			= githubClient.getGithubAccessToken(req.code(), req.state());
+		String githubAccessToken = githubClient.getGithubAccessToken(req.code(), req.state());
 
-		GithubAccount githubAccount = githubClient
-			.getGithubAccountResponse(githubAccessToken)
-			.toDomain(githubAccessToken);
+		GithubAccount githubAccount = githubClient.getGithubAccountResponse(githubAccessToken);
 
 		User user = userRepository.findByGithubAccountGithubId(githubAccount.getGithubId())
 			.orElseGet(() -> signUp(githubAccount));
@@ -64,9 +60,7 @@ public class AuthService {
 		if (userRepository.existsByEmail(req.email())) {
 			throw new IllegalArgumentException("이미 존재하는 이메일입니다.");
 		}
-		GithubAccount githubAccount = githubClient
-			.getGithubAccountResponse(req.gitToken())
-			.toDomain(req.gitToken());
+		GithubAccount githubAccount = githubClient.getGithubAccountResponse(req.gitToken());
 
 		UserCommand.CreateByEmail command = UserCommand.CreateByEmail.builder()
 			.email(req.email())
