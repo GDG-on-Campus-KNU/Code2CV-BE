@@ -15,4 +15,17 @@ public class AuthService {
 	public AuthRes.LoginResponse githubLoginOrSignUp(AuthReq.GithubLoginRequest req) {
 		throw new NotImplementedException("아직 구현되지 않았습니다.");
 	}
+
+	public AuthRes.AccessTokenResponse refreshAccessToken(String rawToken) {
+		throw new NotImplementedException("아직 구현되지 않았습니다.");
+	}
+
+	public AuthRes.LoginResponse emailSignUp(AuthReq.EmailSignUpRequest req) {
+		throw new NotImplementedException("아직 구현되지 않았습니다.");
+	}
+
+	public AuthRes.LoginResponse emailLogin(AuthReq.EmailLoginRequest req) {
+		throw new NotImplementedException("아직 구현되지 않았습니다.");
+	}
+
 }

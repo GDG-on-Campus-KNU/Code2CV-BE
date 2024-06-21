@@ -13,11 +13,4 @@ import team.gdsc.code2cv.global.jwt.JwtUser;
 public class CustomUserDetailService {
 	private final UserRepository userRepository;
 
-	public JwtUser loadUserByUserToken(String userToken) {
-		User user = userRepository.findByUserToken(userToken)
-			.orElseGet(() -> userRepository.save(
-				User.create(UserCreate.builder().userToken(userToken).build())
-			));
-		return JwtUser.builder().id(user.getId()).role(user.getRole()).build();
-	}
 }

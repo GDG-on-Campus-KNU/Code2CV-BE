@@ -9,6 +9,4 @@ import team.gdsc.code2cv.feature.user.entity.User;
 
 @Repository
 public interface UserRepository extends JpaRepository<User, Long> {
-
-	Optional<User> findByUserToken(String userToken);
 }

@@ -8,4 +8,8 @@ public class AuthRes {
 		String refreshToken,
 		UserRes.UserDto user
 	){}
+
+	public record AccessTokenResponse(
+		String accessToken
+	){}
 }
