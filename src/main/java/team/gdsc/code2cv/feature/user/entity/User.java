@@ -2,8 +2,10 @@ package team.gdsc.code2cv.feature.user.entity;
 
 import java.time.LocalDateTime;
 
+import org.apache.commons.lang3.NotImplementedException;
 import org.springframework.data.annotation.CreatedDate;
 
+import jakarta.persistence.Embedded;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
@@ -32,23 +34,23 @@ public class User {
 	@Enumerated(EnumType.STRING)
 	private Role role;
 
-	private String userToken;
 
-	@Enumerated(EnumType.STRING)
-	private VendorName vendorName;
-
-	private String githubToken;
-
-	private String githubNickname;
 
 	@CreatedDate
 	private LocalDateTime createdAt;
 
+	@Embedded
+	private GithubAccount githubAccount;
+
+	@Embedded
+	private UserProfile userProfile;
+
+	public String getGithubAccessToken() {
+		return githubAccount.getGithubAccessToken();
+	}
+
 
 	public static User create(UserCreate userCreate) {
-		return User.builder()
-			.role(Role.ROLE_USER)
-			.userToken(userCreate.getUserToken())
-			.build();
+		throw new NotImplementedException("Not implemented yet");
 	}
 }
