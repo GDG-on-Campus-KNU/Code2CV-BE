@@ -12,15 +12,27 @@ spring: # test profile
     properties:
       hibernate:
         dialect: org.hibernate.dialect.H2Dialect
-    show-sql: true
   h2:
     console:
       enabled: true
       path: /h2-console
   data:
     redis:
-      host: localhost
-      port: 6379
+      host: ${REDIS_HOST:localhost}
+      port: ${REDIS_PORT:6379}
+  security:
+    oauth2:
+      client:
+        registration:
+          github:
+            client-id: Ov23litQMj9bDIctRpxC
+            client-secret: ${GH_CLIENT_SECRET:placeholder}
+  task:
+    execution:
+      pool:
+        core-size: 8 # 코어 스레드 수(최소 스레드 수) (기본값 8개)
+        max-size: 16 # 최대 스레드 수(동시 요청 처리 수) (임시로 16개로 설정)
+
 logging.level:
   org.hibernate:
     orm.jdbc.bind: trace
@@ -29,6 +41,14 @@ springdoc:
   default-consumes-media-type: application/json;charset=UTF-8
   default-produces-media-type: application/json;charset=UTF-8
 jwt:
-  secret: 4099a46b-39db-4860-a61b-2ae76ea24c43
+  secret: ${JWT_SECRET:4099a46b-39db-4860-a61b-2ae76ea24c43}
   access-token-expire-time: 1800000 # 30 minutes
   refresh-token-expire-time: 2592000000 # 30 days
+server:
+  shutdown: graceful # 서버 종료시, 현재 요청을 처리한 후 종료
+  tomcat:
+    connection-timeout: 300000 # 톰켓 커넥션 타임아웃 5분(요청부터 응답까지의 시간)
+    threads:
+      max: 200 # 최대 스레드 수(동시 요청 처리 수) (기본값 200개)
+      min-spare: 10 # 최소 스레드 수(유휴 스레드 수) (기본값 10개)
+    accept-count: 100 # 작업 큐에 대기할 요청 수(큐가 가득차면 클라이언트에 에러 응답) (기본값 100개)
