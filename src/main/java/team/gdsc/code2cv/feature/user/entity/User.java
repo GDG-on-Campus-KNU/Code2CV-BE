@@ -64,4 +64,9 @@ public class User extends BaseTimeEntity {
 			.githubAccount(command.getGithubAccount())
 			.build();
 	}
+
+
+	public void updateGithubAccount(GithubAccount githubAccount) {
+		this.githubAccount = githubAccount;
+	}
 }

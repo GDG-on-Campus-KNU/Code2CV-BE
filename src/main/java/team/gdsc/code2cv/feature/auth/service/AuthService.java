@@ -31,6 +31,7 @@ public class AuthService {
 	 * 1. 깃허브로부터 받은 code와 state를 이용하여 깃허브 access token을 받아온다.
 	 * 2. 깃허브 access token을 이용하여 깃허브 계정 정보를 받아온다.
 	 * 3. 깃허브 계정 정보를 이용하여 회원가입 또는 로그인을 진행한다.
+	 * 4. 로그인시, 내정보가 변경되었을 경우, 이를 반영한다.
 	 */
 	public AuthRes.LoginResponse githubLoginOrSignUp(AuthReq.GithubLoginRequest req) {
 		String githubAccessToken = githubClient.getGithubAccessToken(req.code(), req.state());
@@ -39,6 +40,8 @@ public class AuthService {
 
 		User user = userRepository.findByGithubAccountGithubId(githubAccount.getGithubId())
 			.orElseGet(() -> signUp(githubAccount));
+
+		user.updateGithubAccount(githubAccount);
 
 		JwtToken jwtToken = createToken(user);
 		return AuthRes.LoginResponse.from(jwtToken, user);
