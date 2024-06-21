@@ -5,17 +5,18 @@ import java.util.Date;
 
 import javax.crypto.spec.SecretKeySpec;
 
+import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
+import team.gdsc.code2cv.core.exception.NotAuthorizationException;
 import team.gdsc.code2cv.feature.user.entity.Role;
 
 @Component
-public class JwtProvider {
+public class JwtProvider implements InitializingBean {
 	@Value("${jwt.secret}")
 	private String secret;
 
@@ -23,6 +24,7 @@ public class JwtProvider {
 	private long accessTokenExpireTime;
 	@Value("${jwt.refresh-token-expire-time}")
 	private long refreshTokenExpireTime;
+	private Key secretKey;
 	private static final String ROLE = "role";
 	private static final String IS_ACCESS_TOKEN = "isAccessToken";
 	private static final String HEADER_PREFIX = "Bearer ";
@@ -70,7 +72,7 @@ public class JwtProvider {
 	public String reissueAccessToken(String refreshToken) {
 		Claims claims = extractClaims(refreshToken);
 		if (claims.get(IS_ACCESS_TOKEN, Boolean.class)) {
-			throw new JwtException("RefreshToken이 유효하지 않습니다.");
+			throw new NotAuthorizationException("RefreshToken이 유효하지 않습니다.");
 		}
 		JwtUser jwtUser = claimsToJwtUser(claims);
 		return generateToken(jwtUser, true);
@@ -99,7 +101,6 @@ public class JwtProvider {
 	 * accessToken과 refreshToken의 다른점은 만료시간과, isAccessToken이다.
 	 */
 	private String generateToken(JwtUser jwtUser, boolean isAccessToken) {
-		Key secretKey = generateKey();
 		long expireTime = isAccessToken ? accessTokenExpireTime : refreshTokenExpireTime;
 		Date expireDate = new Date(System.currentTimeMillis() + expireTime);
 		return Jwts.builder()
@@ -111,18 +112,20 @@ public class JwtProvider {
 			.compact();
 	}
 
-	/**
-	 * HS256방식의 키를 생성한다.
-	 */
-	private Key generateKey() {
-		return new SecretKeySpec(secret.getBytes(), SignatureAlgorithm.HS256.getJcaName());
-	}
 
 	private Claims extractClaims(String rawToken) {
 		return Jwts.parserBuilder()
-			.setSigningKey(generateKey())
+			.setSigningKey(secretKey)
 			.build()
 			.parseClaimsJws(rawToken)
 			.getBody();
+	}
+
+	/**
+	 * HS256방식의 키를 생성한다.
+	 */
+	@Override
+	public void afterPropertiesSet() {
+		secretKey = new SecretKeySpec(secret.getBytes(), SignatureAlgorithm.HS256.getJcaName());
 	}
 }
