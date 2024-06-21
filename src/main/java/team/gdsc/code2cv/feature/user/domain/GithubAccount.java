@@ -1,7 +1,6 @@
 package team.gdsc.code2cv.feature.user.domain;
 
 import java.time.LocalDateTime;
-import java.time.ZonedDateTime;
 
 import jakarta.persistence.Embeddable;
 import lombok.AllArgsConstructor;
@@ -15,7 +14,7 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 @AllArgsConstructor
 public class GithubAccount {
-	private String githubId;
+	private Long githubId;
 	private String githubAccessToken;
 	private String githubUsername;
 	private String githubName;

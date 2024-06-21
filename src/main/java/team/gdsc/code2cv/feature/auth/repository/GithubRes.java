@@ -33,7 +33,7 @@ public class GithubRes {
 			LocalDateTime updatedAt = LocalDateTime.ofInstant(instantUpdated, ZoneId.systemDefault());
 
 			return GithubAccount.builder()
-				.githubId(String.valueOf(id))
+				.githubId(id)
 				.githubAccessToken(accessToken)
 				.githubUsername(login)
 				.githubName(name)
