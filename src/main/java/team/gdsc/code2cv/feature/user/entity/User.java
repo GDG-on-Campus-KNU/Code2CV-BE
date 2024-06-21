@@ -10,19 +10,24 @@ import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.Table;
 import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import team.gdsc.code2cv.feature.user.domain.UserAccountCreate;
+import team.gdsc.code2cv.feature.user.domain.UserCreate;
 
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
-public class UserAccount {
+@Table(name = "users") // 예약어 회피
+@AllArgsConstructor
+@Builder
+public class User {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private long id;
+	private Long id;
 
 	@Enumerated(EnumType.STRING)
 	private Role role;
@@ -39,20 +44,11 @@ public class UserAccount {
 	@CreatedDate
 	private LocalDateTime createdAt;
 
-	@Builder
-	private UserAccount(Role role, String userToken, VendorName vendorName, String githubToken,
-		String githubNickname) {
-		this.role = role;
-		this.userToken = userToken;
-		this.vendorName = vendorName;
-		this.githubToken = githubToken;
-		this.githubNickname = githubNickname;
-	}
 
-	public static UserAccount create(UserAccountCreate userAccountCreate) {
-		return UserAccount.builder()
+	public static User create(UserCreate userCreate) {
+		return User.builder()
 			.role(Role.ROLE_USER)
-			.userToken(userAccountCreate.getUserToken())
+			.userToken(userCreate.getUserToken())
 			.build();
 	}
 }

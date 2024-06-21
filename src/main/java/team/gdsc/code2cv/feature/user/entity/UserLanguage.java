@@ -29,7 +29,7 @@ public class UserLanguage {
 
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "user_account_id")
-	private UserAccount userAccount;
+	private User user;
 	private Long rowsAdded;
 	private Long rowsDeleted;
 	private String commits;
@@ -38,9 +38,9 @@ public class UserLanguage {
 	private LocalDateTime lastUpdate;
 
 	@Builder
-	private UserLanguage(UserAccount userAccount, LanguageType languageType, Long rowsAdded, Long rowsDeleted,
+	private UserLanguage(User user, LanguageType languageType, Long rowsAdded, Long rowsDeleted,
 		String commits, Long experience, LocalDateTime lastUpdate) {
-		this.userAccount = userAccount;
+		this.user = user;
 		this.languageType = languageType;
 		this.rowsAdded = rowsAdded;
 		this.rowsDeleted = rowsDeleted;
@@ -49,9 +49,9 @@ public class UserLanguage {
 		this.lastUpdate = lastUpdate;
 	}
 
-	public static UserLanguage create(UserAccount userAccount, UserLanguageCreate userLanguageCreate) {
+	public static UserLanguage create(User user, UserLanguageCreate userLanguageCreate) {
 		return UserLanguage.builder()
-			.userAccount(userAccount)
+			.user(user)
 			.languageType(userLanguageCreate.getLanguageType())
 			.rowsAdded(userLanguageCreate.getRowsAdded())
 			.rowsDeleted(userLanguageCreate.getRowsDeleted())

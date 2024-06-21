@@ -32,10 +32,11 @@ public class Oauth2LoginController {
 				"client_secret", "http://localhost:8080/login/github")
 			.getBody().accessToken();
 
-		Oauth2UserModel oauth2UserModel = Oauth2UserModel.from(
-			githubRestApiClient.getUserInfo("Bearer " + accessToken).getBody());
+		var user = githubRestApiClient.getUserInfo("Bearer " + accessToken).getBody();
+		Oauth2UserModel oauth2UserModel = Oauth2UserModel.from(user);
+		var body = jwtProvider.createToken(customUserDetailService.loadUserByUserToken(oauth2UserModel.userToken()));
 		return ResponseEntity.status(HttpStatus.OK)
-			.body(jwtProvider.createToken(customUserDetailService.loadUserByUserToken(oauth2UserModel.userToken())));
+			.body(body);
 	}
 
 	//userDetails를 확인해서 로그인 성공 여부 확인
