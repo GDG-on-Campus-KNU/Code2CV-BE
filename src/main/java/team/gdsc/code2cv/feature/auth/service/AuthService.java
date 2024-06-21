@@ -61,6 +61,9 @@ public class AuthService {
 			throw new IllegalArgumentException("이미 존재하는 이메일입니다.");
 		}
 		GithubAccount githubAccount = githubClient.getGithubAccountResponse(req.gitToken());
+		if(userRepository.existsByGithubAccountGithubId(githubAccount.getGithubId())) {
+			throw new IllegalArgumentException("이미 가입된 깃허브 계정입니다.");
+		}
 
 		UserCommand.CreateByEmail command = UserCommand.CreateByEmail.builder()
 			.email(req.email())
