@@ -4,6 +4,7 @@ import java.util.List;
 
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import lombok.Builder;
 import lombok.Getter;
 import team.gdsc.code2cv.core.utils.SelfValidating;
@@ -11,20 +12,21 @@ import team.gdsc.code2cv.core.utils.SelfValidating;
 @Getter
 @Builder
 public class ProjectCreate extends SelfValidating<ProjectCreate> {
+	private static final String TECHS_DELIMITER = ",";
 
-	@NotBlank
+	@NotBlank(message = "url은 필수입니다.")
 	private final String url;
-	@NotBlank
+	@NotBlank(message = "name은 필수입니다.")
 	private final String name;
-	@NotBlank
+	@NotNull(message = "techs는 필수입니다.")
 	private final List<Tech> techs;
-	@Min(0)
+	@Min(value = 0, message = "stars는 0 이상이어야 합니다.")
 	private final Integer stars;
-	@Min(0)
+	@Min(value = 0, message = "contributors는 0 이상이어야 합니다.")
 	private final Integer contributors;
-	@Min(0)
+	@Min(value = 0, message = "forks는 0 이상이어야 합니다.")
 	private final Integer forks;
-	@Min(1)
+	@Min(value = 0, message = "commits는 0 이상이어야 합니다.")
 	private final Integer commits;
 
 	public ProjectCreate(String url, String name, List<Tech> techs, Integer stars, Integer contributors, Integer forks,
@@ -36,6 +38,15 @@ public class ProjectCreate extends SelfValidating<ProjectCreate> {
 		this.contributors = contributors;
 		this.forks = forks;
 		this.commits = commits;
+		techsValidation(techs);
 		this.validateSelf();
+	}
+
+	public void techsValidation(List<Tech> techs) {
+		for(Tech tech : techs) {// ,가 포함되어 있는지 확인
+			if(tech.toString().contains(TECHS_DELIMITER)) {
+				throw new IllegalArgumentException("Techs 에 ,가 포함되어 있습니다.");
+			}
+		}
 	}
 }
