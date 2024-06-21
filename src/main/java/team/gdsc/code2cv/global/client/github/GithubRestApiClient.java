@@ -9,6 +9,7 @@ import org.springframework.web.service.annotation.GetExchange;
 import org.springframework.web.service.annotation.HttpExchange;
 
 import team.gdsc.code2cv.global.client.github.response.GithubRepositoryInfoModel;
+import team.gdsc.code2cv.global.client.github.response.GithubUserInfoModel;
 
 @HttpExchange
 public interface GithubRestApiClient {
@@ -24,4 +25,10 @@ public interface GithubRestApiClient {
 		@RequestParam(value = "visibility", defaultValue = "public") String visibility,
 		@RequestParam(value = "affiliation", defaultValue = "owner,collaborator") String affiliation
 	);
+
+	@GetExchange("/user")
+	ResponseEntity<GithubUserInfoModel> getUserInfo(
+		@RequestHeader("Authorization") String token
+	);
+
 }
