@@ -26,13 +26,13 @@ public class AuthController {
 
 	@Operation(summary = "액세스 토큰 재발급", description = "리프레시 토큰을 이용하여 액세스 토큰 재발급")
 	@PostMapping("/api/auth/refresh")
-	public AuthRes.AccessTokenResponse refreshAccessToken(@RequestHeader("Authorization") String authorization) {
+	public AuthRes.AccessTokenResponse reissueAccessToken(@RequestHeader("Authorization") String authorization) {
 		// Bearer 유효성 검사
 		if (!authorization.startsWith("Bearer ")) {
 			throw new IllegalArgumentException("Bearer 토큰이 아닙니다.");
 		}
 		String rawToken = authorization.substring(7);
-		return authService.refreshAccessToken(rawToken);
+		return authService.reissueAccessToken(rawToken);
 	}
 
 	@Operation(summary = "이메일 회원가입", description = "gitToken으로 유저정보 식별 / 회원가입 성공시, JWT 토큰과 유저정보 반환")
