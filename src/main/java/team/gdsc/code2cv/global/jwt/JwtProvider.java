@@ -5,17 +5,18 @@ import java.util.Date;
 
 import javax.crypto.spec.SecretKeySpec;
 
+import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
-import team.gdsc.code2cv.feature.user.entity.Role;
+import team.gdsc.code2cv.core.exception.NotAuthorizationException;
+import team.gdsc.code2cv.feature.user.domain.Role;
 
 @Component
-public class JwtProvider {
+public class JwtProvider implements InitializingBean {
 	@Value("${jwt.secret}")
 	private String secret;
 
@@ -23,6 +24,7 @@ public class JwtProvider {
 	private long accessTokenExpireTime;
 	@Value("${jwt.refresh-token-expire-time}")
 	private long refreshTokenExpireTime;
+	private Key secretKey;
 	private static final String ROLE = "role";
 	private static final String IS_ACCESS_TOKEN = "isAccessToken";
 	private static final String HEADER_PREFIX = "Bearer ";
@@ -52,10 +54,12 @@ public class JwtProvider {
 	 * Jwt가 유효한지 검사하는 메서드.
 	 * 만료시간, 토큰의 유효성을 검사한다.
 	 */
-	public boolean validateToken(String rawToken) {
+	public boolean validateToken(String rawToken, boolean isAccessToken) {
 		try {
 			Claims claims = extractClaims(rawToken);
-			System.out.println("rawToken claims:" + claims.toString());
+			if (claims.get(IS_ACCESS_TOKEN, Boolean.class) != isAccessToken) {
+				return false;
+			}
 			return !claims.getExpiration().before(new Date());
 		} catch (Exception e) {    //JwtException, ExpiredJwtException, NullPointerException
 			return false;
@@ -70,7 +74,7 @@ public class JwtProvider {
 	public String reissueAccessToken(String refreshToken) {
 		Claims claims = extractClaims(refreshToken);
 		if (claims.get(IS_ACCESS_TOKEN, Boolean.class)) {
-			throw new JwtException("RefreshToken이 유효하지 않습니다.");
+			throw new NotAuthorizationException("RefreshToken이 유효하지 않습니다.");
 		}
 		JwtUser jwtUser = claimsToJwtUser(claims);
 		return generateToken(jwtUser, true);
@@ -84,7 +88,6 @@ public class JwtProvider {
 	 */
 	public JwtUser getJwtUser(String rawToken) {
 		Claims claims = extractClaims(rawToken);
-		System.out.println("clamis:" + claims.toString());
 		return claimsToJwtUser(claims);
 	}
 
@@ -99,30 +102,31 @@ public class JwtProvider {
 	 * accessToken과 refreshToken의 다른점은 만료시간과, isAccessToken이다.
 	 */
 	private String generateToken(JwtUser jwtUser, boolean isAccessToken) {
-		Key secretKey = generateKey();
 		long expireTime = isAccessToken ? accessTokenExpireTime : refreshTokenExpireTime;
 		Date expireDate = new Date(System.currentTimeMillis() + expireTime);
 		return Jwts.builder()
 			.signWith(secretKey)
-			.claim(ROLE, jwtUser.getRole().getValue())
+			.claim(ROLE, jwtUser.getRole())
 			.claim(IS_ACCESS_TOKEN, isAccessToken)
 			.setSubject(jwtUser.getId().toString())
 			.setExpiration(expireDate)
 			.compact();
 	}
 
-	/**
-	 * HS256방식의 키를 생성한다.
-	 */
-	private Key generateKey() {
-		return new SecretKeySpec(secret.getBytes(), SignatureAlgorithm.HS256.getJcaName());
-	}
 
 	private Claims extractClaims(String rawToken) {
 		return Jwts.parserBuilder()
-			.setSigningKey(generateKey())
+			.setSigningKey(secretKey)
 			.build()
 			.parseClaimsJws(rawToken)
 			.getBody();
+	}
+
+	/**
+	 * HS256방식의 키를 생성한다.
+	 */
+	@Override
+	public void afterPropertiesSet() {
+		secretKey = new SecretKeySpec(secret.getBytes(), SignatureAlgorithm.HS256.getJcaName());
 	}
 }

@@ -10,9 +10,9 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
-import io.jsonwebtoken.JwtException;
 import lombok.extern.slf4j.Slf4j;
 import team.gdsc.code2cv.core.exception.ExternalServerCommunicationException;
+import team.gdsc.code2cv.core.exception.NotAuthorizationException;
 import team.gdsc.code2cv.core.exception.ResourceNotFoundException;
 import team.gdsc.code2cv.core.exception.TokenExpiredException;
 
@@ -54,11 +54,11 @@ public class ApiExceptionControllerAdvice {
 
 	@ExceptionHandler
 	@ResponseStatus(HttpStatus.UNAUTHORIZED)
-	public ErrorResponse authenticationExceptionHandler(JwtException ex) {
+	public ErrorResponse authenticationExceptionHandler(NotAuthorizationException ex) {
 		log.error("AuthenticationException : {}", ex.getMessage());
 		return ErrorResponse.builder()
 			.debugMessage(ex.getMessage())
-			.code("JWT")
+			.code("NotAuthorizationException")
 			.build();
 	}
 
