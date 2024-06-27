@@ -39,8 +39,8 @@ public class Resume /*extends BaseTimeEntity*/ {
 			.userId(jwtUser.getId())
 			.name(command.getName())
 			.isDone(command.getIsDone())
-			.isDefault(command.getIsDefault())
-			.file("")
+			.isDefault(false)
+			.file(null)
 			.build();
 
 	}
@@ -50,7 +50,7 @@ public class Resume /*extends BaseTimeEntity*/ {
 			.userId(jwtUser.getId())
 			.name(command.getName())
 			.isDone(true)
-			.isDefault(command.getIsDefault())
+			.isDefault(false)
 			.file(command.getFile())
 			.build();
 	}
