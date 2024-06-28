@@ -26,10 +26,10 @@ public class ResumeServiceTest {
 	@Autowired private ResumeRepository resumeRepository;
 
 	@Nested
+	@Transactional
 	class GetAllResumes {
 
 		@Test
-		@Transactional
 		@DisplayName("유저의 모든 이력서를 조회한다.")
 		void getAllResumes() {
 			// given
@@ -96,7 +96,6 @@ public class ResumeServiceTest {
 		}
 
 		@Test
-		@Transactional
 		@DisplayName("유저의 이력서가 없을 때 빈 리스트를 반환한다.")
 		void getAllResumes_empty() {
 			// given
@@ -110,6 +109,131 @@ public class ResumeServiceTest {
 
 			// then
 			assertThat(resumes).isEmpty();
+		}
+	}
+
+	@Nested
+	@Transactional
+	class GetResumeTest {
+
+		@Test
+		@DisplayName("유저의 이력서를 조회한다.")
+		void getResume() {
+			// given
+			var commands = List.of(
+				ResumeCommand.CreateByNew.builder()
+					.name("이력서")
+					.isDone(false)
+					.build(),
+				ResumeCommand.CreateByNew.builder()
+					.name("이력서2")
+					.isDone(false)
+					.build(),
+				ResumeCommand.CreateByNew.builder()
+					.name("이력서3")
+					.isDone(false)
+					.build(),
+				ResumeCommand.CreateByUpload.builder()
+					.name("이력서4")
+					.file("파일")
+					.build()
+			);
+
+			JwtUser jwtUser = JwtUser.builder()
+				.id(1L)
+				.role(Role.USER)
+				.build();
+
+
+			List<Resume> resumes = commands.stream()
+					.map(command -> {
+						Resume resume = null;
+						if (command instanceof ResumeCommand.CreateByNew) {
+							resume = Resume.create((ResumeCommand.CreateByNew) command, jwtUser);
+						} else if (command instanceof ResumeCommand.CreateByUpload) {
+							resume = Resume.create((ResumeCommand.CreateByUpload) command, jwtUser);
+						} else {
+							throw new IllegalArgumentException("지원하지 않는 타입입니다.");
+						}
+						return resume;
+					}).map(resumeRepository::save).toList();
+
+			// when
+			ResumeRes.ResumeDto resume = resumeService.getResume(jwtUser, resumes.get(0).getId());
+
+			System.out.println("resume = " + resume);
+
+			// then
+			assertThat(resume.name()).isEqualTo("이력서");
+			assertThat(resume.isDone()).isFalse();
+			assertThat(resume.isDefault()).isFalse();
+			assertThat(resume.file()).isNull();
+		}
+
+		@Test
+		@DisplayName("유저의 이력서가 없을 때 예외를 발생시킨다.")
+		void getResume_notFound() {
+			// given
+			JwtUser jwtUser = JwtUser.builder()
+				.id(1L)
+				.role(Role.USER)
+				.build();
+
+			// when, then
+			assertThatThrownBy(() -> resumeService.getResume(jwtUser, 1L))
+				.isInstanceOf(IllegalArgumentException.class)
+				.hasMessage("해당 이력서를 찾을 수 없습니다.");
+		}
+
+		@Test
+		@DisplayName("유저의 이력서가 아닐 때 예외를 발생시킨다.")
+		void getResume_notUser() {
+			// given
+			var commands = List.of(
+				ResumeCommand.CreateByNew.builder()
+					.name("이력서")
+					.isDone(false)
+					.build(),
+				ResumeCommand.CreateByNew.builder()
+					.name("이력서2")
+					.isDone(false)
+					.build(),
+				ResumeCommand.CreateByNew.builder()
+					.name("이력서3")
+					.isDone(false)
+					.build(),
+				ResumeCommand.CreateByUpload.builder()
+					.name("이력서4")
+					.file("파일")
+					.build()
+			);
+
+			JwtUser jwtUser = JwtUser.builder()
+				.id(1L)
+				.role(Role.USER)
+				.build();
+
+			commands.forEach(command -> {
+				Resume resume = null;
+				if (command instanceof ResumeCommand.CreateByNew) {
+					resume = Resume.create((ResumeCommand.CreateByNew) command, jwtUser);
+				} else if (command instanceof ResumeCommand.CreateByUpload) {
+					resume = Resume.create((ResumeCommand.CreateByUpload) command, jwtUser);
+				} else {
+					throw new IllegalArgumentException("지원하지 않는 타입입니다.");
+				}
+				resumeRepository.save(resume);
+			});
+
+			JwtUser notUser = JwtUser.builder()
+				.id(2L)
+				.role(Role.USER)
+				.build();
+
+			// when, then
+			assertThatThrownBy(() -> resumeService.getResume(notUser, 1L))
+				.isInstanceOf(IllegalArgumentException.class)
+				.hasMessage("해당 이력서를 찾을 수 없습니다.");
 		}
 	}
 

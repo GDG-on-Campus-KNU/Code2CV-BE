@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
 
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -21,5 +22,10 @@ public class ResumeController {
 	@GetMapping("/api/resumes")
 	public List<ResumeRes.ResumeDto> getResumes(@AuthenticationPrincipal JwtUser jwtUser) {
 		return resumeService.getAllResumes(jwtUser);
+	}
+
+	@GetMapping("/api/resume/{resumeId}")
+	public ResumeRes.ResumeDto getResume(@AuthenticationPrincipal JwtUser jwtUser, @PathVariable Long resumeId) {
+		return resumeService.getResume(jwtUser, resumeId);
 	}
 }
