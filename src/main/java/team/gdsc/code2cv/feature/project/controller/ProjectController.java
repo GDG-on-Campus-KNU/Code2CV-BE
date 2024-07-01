@@ -1,7 +1,6 @@
 package team.gdsc.code2cv.feature.project.controller;
 
 import java.util.List;
-import java.util.Objects;
 
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -27,12 +26,12 @@ public class ProjectController {
 	public List<ProjectRes.ProjectDto> getAllProjects(
 		@AuthenticationPrincipal JwtUser jwtUser
 	) {
-		return projectService.getAllProjects(jwtUser.getId());
+		return projectService.getAllUserProjects(jwtUser.getId());
 	}
 
-	@Operation(summary = "프로젝트 분석", description = "사용자 프로젝트를 갱신합니다.")
-	@PostMapping("/api/projects/analyze")
-	public void analyzeProject(@AuthenticationPrincipal JwtUser jwtUser) {
-		projectService.analyzeProject(jwtUser.getId());
+	@Operation(summary = "프로젝트 불러오기", description = "사용자 프로젝트를 불러와 갱신 작업 수행")
+	@PostMapping("/api/projects")
+	public void saveProject(@AuthenticationPrincipal JwtUser jwtUser) {
+		projectService.saveUserProjects(jwtUser.getId());
 	}
 }
