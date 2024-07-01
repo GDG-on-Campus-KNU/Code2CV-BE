@@ -24,7 +24,7 @@ public record GithubRepoApiResponse(
 	int stargazersCount,
 	String language
 ) {
-	public ProjectCommand.Create toCommand() {
+	public ProjectCommand.Create toCreateCommand() {
 		DateTimeFormatter koreanFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss'Z'")
 			.withZone(ZoneId.of("Asia/Seoul"));
 		return ProjectCommand.Create.builder()
