@@ -17,6 +17,10 @@ import team.gdsc.code2cv.feature.resume.domain.activity.Activity;
 import team.gdsc.code2cv.feature.resume.domain.activity.ActivityListConverter;
 import team.gdsc.code2cv.feature.resume.domain.career.Career;
 import team.gdsc.code2cv.feature.resume.domain.career.CareerListConverter;
+import team.gdsc.code2cv.feature.resume.domain.certification.Certification;
+import team.gdsc.code2cv.feature.resume.domain.certification.CertificationListConverter;
+import team.gdsc.code2cv.feature.resume.domain.education.Education;
+import team.gdsc.code2cv.feature.resume.domain.education.EducationListConverter;
 import team.gdsc.code2cv.global.jwt.JwtUser;
 import team.gdsc.code2cv.global.repository.BaseTimeEntity;
 
@@ -45,6 +49,12 @@ public class Resume extends BaseTimeEntity {
 
 	@Convert(converter = ActivityListConverter.class)
 	private List<Activity> activities;
+
+	@Convert(converter = CertificationListConverter.class)
+	private List<Certification> certifications;
+
+	@Convert(converter = EducationListConverter.class)
+	private List<Education> educations;
 
 	public static Resume create(ResumeCommand.CreateByNew command, JwtUser jwtUser) {
 		return Resume.builder()
