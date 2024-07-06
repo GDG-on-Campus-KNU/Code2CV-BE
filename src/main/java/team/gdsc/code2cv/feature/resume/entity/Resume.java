@@ -12,11 +12,11 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import team.gdsc.code2cv.feature.resume.domain.Career;
-import team.gdsc.code2cv.feature.resume.domain.CareerListConverter;
 import team.gdsc.code2cv.feature.resume.domain.ResumeCommand;
 import team.gdsc.code2cv.feature.resume.domain.activity.Activity;
 import team.gdsc.code2cv.feature.resume.domain.activity.ActivityListConverter;
+import team.gdsc.code2cv.feature.resume.domain.career.Career;
+import team.gdsc.code2cv.feature.resume.domain.career.CareerListConverter;
 import team.gdsc.code2cv.global.jwt.JwtUser;
 import team.gdsc.code2cv.global.repository.BaseTimeEntity;
 

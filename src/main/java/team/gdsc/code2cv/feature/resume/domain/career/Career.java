@@ -1,10 +1,11 @@
-package team.gdsc.code2cv.feature.resume.domain;
+package team.gdsc.code2cv.feature.resume.domain.career;
 
 import jakarta.persistence.Embeddable;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
+import team.gdsc.code2cv.feature.resume.domain.CareerType;
 
 @Embeddable
 @Builder

@@ -1,13 +1,10 @@
-package team.gdsc.code2cv.feature.resume.domain;
+package team.gdsc.code2cv.feature.resume.domain.activity;
 
 import static org.assertj.core.api.Assertions.*;
 
 import java.util.List;
 
 import org.junit.jupiter.api.Test;
-
-import team.gdsc.code2cv.feature.resume.domain.activity.Activity;
-import team.gdsc.code2cv.feature.resume.domain.activity.ActivityListConverter;
 
 class ActivityListConverterTest {
 

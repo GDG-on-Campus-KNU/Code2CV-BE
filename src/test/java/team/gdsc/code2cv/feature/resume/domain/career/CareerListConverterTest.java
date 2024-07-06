@@ -1,4 +1,4 @@
-package team.gdsc.code2cv.feature.resume.domain;
+package team.gdsc.code2cv.feature.resume.domain.career;
 
 import static org.assertj.core.api.Assertions.*;
 
@@ -81,7 +81,6 @@ public class CareerListConverterTest {
 		assertThat(result.get(1).getEndDate()).isNull();
 		assertThat(result.get(1).getType()).isEqualTo(CareerType.FREELANCE);
 		assertThat(result.get(1).getIsWorking()).isFalse();
-
 
 	}
 }

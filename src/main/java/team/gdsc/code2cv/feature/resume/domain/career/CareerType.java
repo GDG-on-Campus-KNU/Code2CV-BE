@@ -1,4 +1,4 @@
-package team.gdsc.code2cv.feature.resume.domain;
+package team.gdsc.code2cv.feature.resume.domain.career;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
