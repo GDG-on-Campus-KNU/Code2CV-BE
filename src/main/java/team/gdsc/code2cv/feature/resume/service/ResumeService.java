@@ -6,6 +6,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import lombok.RequiredArgsConstructor;
+import team.gdsc.code2cv.feature.resume.dto.ResumeReq;
 import team.gdsc.code2cv.feature.resume.dto.ResumeRes;
 import team.gdsc.code2cv.feature.resume.entity.Resume;
 import team.gdsc.code2cv.feature.resume.repository.ResumeRepository;
@@ -26,9 +27,30 @@ public class ResumeService {
 	}
 
 	@Transactional(readOnly = true)
-	public ResumeRes.ResumeDto getResume(JwtUser jwtUser, Long resumeId) {
+	public ResumeRes.ResumeDetailDto getResume(JwtUser jwtUser, Long resumeId) {
 		Resume resume = resumeRepository.findByIdAndUserId(resumeId, jwtUser.getId())
 			.orElseThrow(() -> new IllegalArgumentException("해당 이력서를 찾을 수 없습니다."));
+
+		return ResumeRes.ResumeDetailDto.from(resume);
+	}
+
+	public ResumeRes.ResumeDto createResume(JwtUser jwtUser, ResumeReq.CreateByNewRequest request) {
+		Resume resume = resumeRepository.save(Resume.create(request, jwtUser));
+
+		return ResumeRes.ResumeDto.from(resume);
+	}
+
+	public ResumeRes.ResumeDto uploadResume(JwtUser jwtUser, ResumeReq.CreateByUploadRequest request) {
+		Resume resume = resumeRepository.save(Resume.create(request, jwtUser));
+
+		return ResumeRes.ResumeDto.from(resume);
+	}
+
+	public ResumeRes.ResumeDto updateResume(JwtUser jwtUser, Long resumeId, ResumeReq.UpdateRequest request) {
+		Resume resume = resumeRepository.findByIdAndUserId(resumeId, jwtUser.getId())
+			.orElseThrow(() -> new IllegalArgumentException("해당 이력서를 찾을 수 없습니다."));
+
+		resume.update(request);
 
 		return ResumeRes.ResumeDto.from(resume);
 	}

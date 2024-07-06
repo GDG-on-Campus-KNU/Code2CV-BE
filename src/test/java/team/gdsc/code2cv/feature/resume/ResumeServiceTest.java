@@ -159,7 +159,7 @@ public class ResumeServiceTest {
 					}).map(resumeRepository::save).toList();
 
 			// when
-			ResumeRes.ResumeDto resume = resumeService.getResume(jwtUser, resumes.get(0).getId());
+			ResumeRes.ResumeDetailDto resume = resumeService.getResume(jwtUser, resumes.get(0).getId());
 
 			System.out.println("resume = " + resume);
 

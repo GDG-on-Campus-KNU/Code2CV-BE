@@ -82,4 +82,36 @@ class EducationListConverterTest {
 		assertThat(result.get(1).getStartDate()).isEqualTo("2021-03-01");
 		assertThat(result.get(1).getEndDate()).isEqualTo("2025-02-28");
 	}
+
+	@Test
+	void convertToEntityAttribute_null() {
+		// given
+		String dbData = null;
+
+		// when & then
+		assertThatThrownBy(() -> educationListConverter.convertToEntityAttribute(dbData))
+			.isInstanceOf(RuntimeException.class);
+	}
+
+	@Test
+	void convertToEntityAttribute_empty() {
+		// given
+		String dbData = "";
+
+		// when & then
+		assertThatThrownBy(() -> educationListConverter.convertToEntityAttribute(dbData))
+			.isInstanceOf(RuntimeException.class);
+	}
+
+	@Test
+	void convertToEntityAttribute_empty_list() {
+		// given
+		String dbData = "[]";
+
+		// when
+		List<Education> result = educationListConverter.convertToEntityAttribute(dbData);
+
+		// then
+		assertThat(result).isEmpty();
+	}
 }

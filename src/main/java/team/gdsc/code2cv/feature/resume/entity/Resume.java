@@ -1,5 +1,6 @@
 package team.gdsc.code2cv.feature.resume.entity;
 
+import java.util.Collections;
 import java.util.List;
 
 import jakarta.persistence.Convert;
@@ -21,6 +22,7 @@ import team.gdsc.code2cv.feature.resume.domain.certification.Certification;
 import team.gdsc.code2cv.feature.resume.domain.certification.CertificationListConverter;
 import team.gdsc.code2cv.feature.resume.domain.education.Education;
 import team.gdsc.code2cv.feature.resume.domain.education.EducationListConverter;
+import team.gdsc.code2cv.feature.resume.dto.ResumeReq;
 import team.gdsc.code2cv.global.jwt.JwtUser;
 import team.gdsc.code2cv.global.repository.BaseTimeEntity;
 
@@ -55,6 +57,44 @@ public class Resume extends BaseTimeEntity {
 
 	@Convert(converter = EducationListConverter.class)
 	private List<Education> educations;
+
+	public void update(ResumeReq.UpdateRequest request) {
+		this.name = request.name();
+		this.isDone = request.isDone();
+		this.isDefault = request.isDefault();
+		this.careers = request.careers();
+		this.activities = request.activities();
+		this.certifications = request.certifications();
+		this.educations = request.educations();
+	}
+
+	public static Resume create(ResumeReq.CreateByNewRequest request, JwtUser jwtUser) {
+		return Resume.builder()
+			.userId(jwtUser.getId())
+			.name(request.name())
+			.isDone(request.isDone())
+			.isDefault(false)
+			.file(null)
+			.careers(Collections.emptyList())
+			.activities(Collections.emptyList())
+			.certifications(Collections.emptyList())
+			.educations(Collections.emptyList())
+			.build();
+	}
+
+	public static Resume create(ResumeReq.CreateByUploadRequest request, JwtUser jwtUser) {
+		return Resume.builder()
+			.userId(jwtUser.getId())
+			.name(request.name())
+			.isDone(true)
+			.isDefault(false)
+			.file(request.file())
+			.careers(Collections.emptyList())
+			.activities(Collections.emptyList())
+			.certifications(Collections.emptyList())
+			.educations(Collections.emptyList())
+			.build();
+	}
 
 	public static Resume create(ResumeCommand.CreateByNew command, JwtUser jwtUser) {
 		return Resume.builder()
