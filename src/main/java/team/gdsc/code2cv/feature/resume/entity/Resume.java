@@ -15,6 +15,8 @@ import lombok.NoArgsConstructor;
 import team.gdsc.code2cv.feature.resume.domain.Career;
 import team.gdsc.code2cv.feature.resume.domain.CareerListConverter;
 import team.gdsc.code2cv.feature.resume.domain.ResumeCommand;
+import team.gdsc.code2cv.feature.resume.domain.activity.Activity;
+import team.gdsc.code2cv.feature.resume.domain.activity.ActivityListConverter;
 import team.gdsc.code2cv.global.jwt.JwtUser;
 import team.gdsc.code2cv.global.repository.BaseTimeEntity;
 
@@ -40,6 +42,9 @@ public class Resume extends BaseTimeEntity {
 
 	@Convert(converter = CareerListConverter.class)
 	private List<Career> careers;
+
+	@Convert(converter = ActivityListConverter.class)
+	private List<Activity> activities;
 
 	public static Resume create(ResumeCommand.CreateByNew command, JwtUser jwtUser) {
 		return Resume.builder()
