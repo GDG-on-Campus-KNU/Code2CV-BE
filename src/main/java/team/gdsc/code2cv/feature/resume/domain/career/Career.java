@@ -5,7 +5,6 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
-import team.gdsc.code2cv.feature.resume.domain.CareerType;
 
 @Embeddable
 @Builder
