@@ -25,26 +25,26 @@ public class ResumeController {
 
 	@GetMapping("/api/resumes")
 	public List<ResumeRes.ResumeDto> getAllResumes(@AuthenticationPrincipal JwtUser jwtUser) {
-		return resumeService.getAllResumes(jwtUser);
+		return resumeService.getAllResumes(jwtUser.getId());
 	}
 
-	@GetMapping("/api/resume/{resumeId}")
+	@GetMapping("/api/resumes/{resumeId}")
 	public ResumeRes.ResumeDetailDto getResume(@AuthenticationPrincipal JwtUser jwtUser, @PathVariable Long resumeId) {
-		return resumeService.getResume(jwtUser, resumeId);
+		return resumeService.getResume(jwtUser.getId(), resumeId);
 	}
 
-	@PostMapping("/api/resume")
+	@PostMapping("/api/resumes")
 	public ResumeRes.ResumeDto createResume(@AuthenticationPrincipal JwtUser jwtUser, @RequestBody ResumeReq.CreateByNewRequest request) {
-		return resumeService.createResume(jwtUser, request);
+		return resumeService.createResume(jwtUser.getId(), request);
 	}
 
-	@PostMapping("/api/resume/upload")
+	@PostMapping("/api/resumes/upload")
 	public ResumeRes.ResumeDto uploadResume(@AuthenticationPrincipal JwtUser jwtUser, @RequestBody ResumeReq.CreateByUploadRequest request) {
-		return resumeService.uploadResume(jwtUser, request);
+		return resumeService.uploadResume(jwtUser.getId(), request);
 	}
 
-	@PutMapping("/api/resume/{resumeId}")
+	@PutMapping("/api/resumes/{resumeId}")
 	public ResumeRes.ResumeDto updateResume(@AuthenticationPrincipal JwtUser jwtUser, @PathVariable Long resumeId, @RequestBody ResumeReq.UpdateRequest request) {
-		return resumeService.updateResume(jwtUser, resumeId, request);
+		return resumeService.updateResume(jwtUser.getId(), resumeId, request);
 	}
 }
