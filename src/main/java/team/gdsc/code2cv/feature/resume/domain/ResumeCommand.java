@@ -18,10 +18,7 @@ public class ResumeCommand {
 		private final Boolean isDone;
 
 		public CreateByNew(String name, Boolean isDone) {
-			if (name != null)
-				this.name = name.strip();
-			else
-				this.name = null;
+			this.name = name;
 			this.isDone = isDone;
 			this.validateSelf();
 		}
@@ -38,10 +35,7 @@ public class ResumeCommand {
 		private final String file;
 
 		public CreateByUpload(String name, String file) {
-			if (name != null)
-				this.name = name.strip();
-			else
-				this.name = null;
+			this.name = name;
 			this.file = file;
 			this.validateSelf();
 		}

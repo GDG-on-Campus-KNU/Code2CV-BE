@@ -6,6 +6,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import lombok.RequiredArgsConstructor;
+import team.gdsc.code2cv.feature.resume.domain.ResumeCommand;
 import team.gdsc.code2cv.feature.resume.dto.ResumeReq;
 import team.gdsc.code2cv.feature.resume.dto.ResumeRes;
 import team.gdsc.code2cv.feature.resume.entity.Resume;
@@ -46,7 +47,9 @@ public class ResumeService {
 		// 유저 확인 후 존재하지 않으면 예외 발생
 		User user = userRepository.findByIdOrThrow(userId);
 
-		Resume resume = resumeRepository.save(Resume.create(request, user));
+		ResumeCommand.CreateByNew command = new ResumeCommand.CreateByNew(request.name().strip(), request.isDone());
+
+		Resume resume = resumeRepository.save(Resume.create(command, user));
 
 		return ResumeRes.ResumeDto.from(resume);
 	}
@@ -55,7 +58,10 @@ public class ResumeService {
 		// 유저 확인 후 존재하지 않으면 예외 발생
 		User user = userRepository.findByIdOrThrow(userId);
 
-		Resume resume = resumeRepository.save(Resume.create(request, user));
+		ResumeCommand.CreateByUpload command = new ResumeCommand.CreateByUpload(request.name().strip(),
+			request.file().strip());
+
+		Resume resume = resumeRepository.save(Resume.create(command, user));
 
 		return ResumeRes.ResumeDto.from(resume);
 	}

@@ -1,6 +1,5 @@
 package team.gdsc.code2cv.feature.resume.entity;
 
-import java.util.Collections;
 import java.util.List;
 
 import jakarta.persistence.Column;
@@ -76,34 +75,6 @@ public class Resume extends BaseTimeEntity {
 		this.activities = request.activities();
 		this.certifications = request.certifications();
 		this.educations = request.educations();
-	}
-
-	public static Resume create(ResumeReq.CreateByNewRequest request, User user) {
-		return Resume.builder()
-			.user(user)
-			.name(request.name())
-			.isDone(request.isDone())
-			.isDefault(false)
-			.file(null)
-			.careers(Collections.emptyList())
-			.activities(Collections.emptyList())
-			.certifications(Collections.emptyList())
-			.educations(Collections.emptyList())
-			.build();
-	}
-
-	public static Resume create(ResumeReq.CreateByUploadRequest request, User user) {
-		return Resume.builder()
-			.user(user)
-			.name(request.name())
-			.isDone(true)
-			.isDefault(false)
-			.file(request.file())
-			.careers(Collections.emptyList())
-			.activities(Collections.emptyList())
-			.certifications(Collections.emptyList())
-			.educations(Collections.emptyList())
-			.build();
 	}
 
 	public static Resume create(ResumeCommand.CreateByNew command, User user) {
