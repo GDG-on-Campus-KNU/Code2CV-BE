@@ -2,6 +2,7 @@ package team.gdsc.code2cv.feature.resume;
 
 import static org.assertj.core.api.Assertions.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.junit.jupiter.api.DisplayName;
@@ -16,14 +17,20 @@ import team.gdsc.code2cv.feature.resume.dto.ResumeRes;
 import team.gdsc.code2cv.feature.resume.entity.Resume;
 import team.gdsc.code2cv.feature.resume.repository.ResumeRepository;
 import team.gdsc.code2cv.feature.resume.service.ResumeService;
-import team.gdsc.code2cv.feature.user.domain.Role;
-import team.gdsc.code2cv.global.jwt.JwtUser;
+import team.gdsc.code2cv.feature.user.domain.GithubAccount;
+import team.gdsc.code2cv.feature.user.domain.UserCommand;
+import team.gdsc.code2cv.feature.user.entity.User;
+import team.gdsc.code2cv.feature.user.repository.UserRepository;
 
 @SpringBootTest
 public class ResumeServiceTest {
 
-	@Autowired private ResumeService resumeService;
-	@Autowired private ResumeRepository resumeRepository;
+	@Autowired
+	private UserRepository userRepository;
+	@Autowired
+	private ResumeService resumeService;
+	@Autowired
+	private ResumeRepository resumeRepository;
 
 	@Nested
 	@Transactional
@@ -33,7 +40,16 @@ public class ResumeServiceTest {
 		@DisplayName("유저의 모든 이력서를 조회한다.")
 		void getAllResumes() {
 			// given
-			var commands = List.of(
+			// User
+			UserCommand.CreateByEmail userCommand = new UserCommand.CreateByEmail("test@abc.def", "password",
+				new GithubAccount());
+
+			User user = userRepository.save(User.create(userCommand));
+
+			// Resumes
+			List<Resume> resumes = new ArrayList<>();
+
+			var newCommands = List.of(
 				ResumeCommand.CreateByNew.builder()
 					.name("이력서")
 					.isDone(false)
@@ -45,67 +61,59 @@ public class ResumeServiceTest {
 				ResumeCommand.CreateByNew.builder()
 					.name("이력서3")
 					.isDone(false)
-					.build(),
-				ResumeCommand.CreateByUpload.builder()
-					.name("이력서4")
-					.file("파일")
 					.build()
 			);
 
-			JwtUser jwtUser = JwtUser.builder()
-				.id(1L)
-				.role(Role.USER)
+			var uploadCommand = ResumeCommand.CreateByUpload.builder()
+				.name("이력서4")
+				.file("파일")
 				.build();
 
-			commands.forEach(command -> {
-				Resume resume = null;
-				if (command instanceof ResumeCommand.CreateByNew) {
-					resume = Resume.create((ResumeCommand.CreateByNew) command, jwtUser);
-				} else if (command instanceof ResumeCommand.CreateByUpload) {
-					resume = Resume.create((ResumeCommand.CreateByUpload) command, jwtUser);
-				} else {
-					throw new IllegalArgumentException("지원하지 않는 타입입니다.");
-				}
-				resumeRepository.save(resume);
-			});
+			newCommands.stream()
+				.map(command -> Resume.create(command, user))
+				.map(resumeRepository::save)
+				.forEach(resumes::add);
+
+			resumeRepository.save(Resume.create(uploadCommand, user));
 
 			// when
-			List<ResumeRes.ResumeDto> resumes = resumeService.getAllResumes(jwtUser);
+			List<ResumeRes.ResumeDto> fetchResumes = resumeService.getAllResumes(user.getId());
 
 			// then
-			assertThat(resumes).hasSize(4);
-			assertThat(resumes.get(0).name()).isEqualTo("이력서");
-			assertThat(resumes.get(1).name()).isEqualTo("이력서2");
-			assertThat(resumes.get(2).name()).isEqualTo("이력서3");
-			assertThat(resumes.get(3).name()).isEqualTo("이력서4");
+			assertThat(fetchResumes).hasSize(4);
+			assertThat(fetchResumes.get(0).name()).isEqualTo("이력서");
+			assertThat(fetchResumes.get(1).name()).isEqualTo("이력서2");
+			assertThat(fetchResumes.get(2).name()).isEqualTo("이력서3");
+			assertThat(fetchResumes.get(3).name()).isEqualTo("이력서4");
 
-			assertThat(resumes.get(0).isDone()).isFalse();
-			assertThat(resumes.get(1).isDone()).isFalse();
-			assertThat(resumes.get(2).isDone()).isFalse();
-			assertThat(resumes.get(3).isDone()).isTrue();
+			assertThat(fetchResumes.get(0).isDone()).isFalse();
+			assertThat(fetchResumes.get(1).isDone()).isFalse();
+			assertThat(fetchResumes.get(2).isDone()).isFalse();
+			assertThat(fetchResumes.get(3).isDone()).isTrue();
 
-			assertThat(resumes.get(0).isDefault()).isFalse();
-			assertThat(resumes.get(1).isDefault()).isFalse();
-			assertThat(resumes.get(2).isDefault()).isFalse();
-			assertThat(resumes.get(3).isDefault()).isFalse();
+			assertThat(fetchResumes.get(0).isDefault()).isFalse();
+			assertThat(fetchResumes.get(1).isDefault()).isFalse();
+			assertThat(fetchResumes.get(2).isDefault()).isFalse();
+			assertThat(fetchResumes.get(3).isDefault()).isFalse();
 
-			assertThat(resumes.get(0).file()).isNull();
-			assertThat(resumes.get(1).file()).isNull();
-			assertThat(resumes.get(2).file()).isNull();
-			assertThat(resumes.get(3).file()).isEqualTo("파일");
+			assertThat(fetchResumes.get(0).file()).isNull();
+			assertThat(fetchResumes.get(1).file()).isNull();
+			assertThat(fetchResumes.get(2).file()).isNull();
+			assertThat(fetchResumes.get(3).file()).isEqualTo("파일");
 		}
 
 		@Test
 		@DisplayName("유저의 이력서가 없을 때 빈 리스트를 반환한다.")
 		void getAllResumes_empty() {
 			// given
-			JwtUser jwtUser = JwtUser.builder()
-				.id(1L)
-				.role(Role.USER)
-				.build();
+			// User
+			UserCommand.CreateByEmail userCommand = new UserCommand.CreateByEmail("test@abc.def", "password",
+				new GithubAccount());
+
+			User user = userRepository.save(User.create(userCommand));
 
 			// when
-			List<ResumeRes.ResumeDto> resumes = resumeService.getAllResumes(jwtUser);
+			List<ResumeRes.ResumeDto> resumes = resumeService.getAllResumes(user.getId());
 
 			// then
 			assertThat(resumes).isEmpty();
@@ -120,7 +128,16 @@ public class ResumeServiceTest {
 		@DisplayName("유저의 이력서를 조회한다.")
 		void getResume() {
 			// given
-			var commands = List.of(
+			// User
+			UserCommand.CreateByEmail userCommand = new UserCommand.CreateByEmail("test@abc.def", "password",
+				new GithubAccount());
+
+			User user = userRepository.save(User.create(userCommand));
+
+			// Resumes
+			List<Resume> resumes = new ArrayList<>();
+
+			var newCommands = List.of(
 				ResumeCommand.CreateByNew.builder()
 					.name("이력서")
 					.isDone(false)
@@ -132,36 +149,23 @@ public class ResumeServiceTest {
 				ResumeCommand.CreateByNew.builder()
 					.name("이력서3")
 					.isDone(false)
-					.build(),
-				ResumeCommand.CreateByUpload.builder()
-					.name("이력서4")
-					.file("파일")
 					.build()
 			);
 
-			JwtUser jwtUser = JwtUser.builder()
-				.id(1L)
-				.role(Role.USER)
+			var uploadCommand = ResumeCommand.CreateByUpload.builder()
+				.name("이력서4")
+				.file("파일")
 				.build();
 
+			newCommands.stream()
+				.map(command -> Resume.create(command, user))
+				.map(resumeRepository::save)
+				.forEach(resumes::add);
 
-			List<Resume> resumes = commands.stream()
-					.map(command -> {
-						Resume resume = null;
-						if (command instanceof ResumeCommand.CreateByNew) {
-							resume = Resume.create((ResumeCommand.CreateByNew) command, jwtUser);
-						} else if (command instanceof ResumeCommand.CreateByUpload) {
-							resume = Resume.create((ResumeCommand.CreateByUpload) command, jwtUser);
-						} else {
-							throw new IllegalArgumentException("지원하지 않는 타입입니다.");
-						}
-						return resume;
-					}).map(resumeRepository::save).toList();
+			resumeRepository.save(Resume.create(uploadCommand, user));
 
 			// when
-			ResumeRes.ResumeDetailDto resume = resumeService.getResume(jwtUser, resumes.get(0).getId());
-
-			System.out.println("resume = " + resume);
+			ResumeRes.ResumeDetailDto resume = resumeService.getResume(user.getId(), resumes.get(0).getId());
 
 			// then
 			assertThat(resume.name()).isEqualTo("이력서");
@@ -174,13 +178,14 @@ public class ResumeServiceTest {
 		@DisplayName("유저의 이력서가 없을 때 예외를 발생시킨다.")
 		void getResume_notFound() {
 			// given
-			JwtUser jwtUser = JwtUser.builder()
-				.id(1L)
-				.role(Role.USER)
-				.build();
+			// User
+			UserCommand.CreateByEmail userCommand = new UserCommand.CreateByEmail("test@abc.def", "password",
+				new GithubAccount());
+
+			User user = userRepository.save(User.create(userCommand));
 
 			// when, then
-			assertThatThrownBy(() -> resumeService.getResume(jwtUser, 1L))
+			assertThatThrownBy(() -> resumeService.getResume(user.getId(), 1L))
 				.isInstanceOf(IllegalArgumentException.class)
 				.hasMessage("해당 이력서를 찾을 수 없습니다.");
 		}
@@ -189,7 +194,16 @@ public class ResumeServiceTest {
 		@DisplayName("유저의 이력서가 아닐 때 예외를 발생시킨다.")
 		void getResume_notUser() {
 			// given
-			var commands = List.of(
+			// User
+			UserCommand.CreateByEmail userCommand = new UserCommand.CreateByEmail("test@abc.def", "password",
+				new GithubAccount());
+
+			User user = userRepository.save(User.create(userCommand));
+
+			// Resumes
+			List<Resume> resumes = new ArrayList<>();
+
+			var newCommands = List.of(
 				ResumeCommand.CreateByNew.builder()
 					.name("이력서")
 					.isDone(false)
@@ -201,37 +215,28 @@ public class ResumeServiceTest {
 				ResumeCommand.CreateByNew.builder()
 					.name("이력서3")
 					.isDone(false)
-					.build(),
-				ResumeCommand.CreateByUpload.builder()
-					.name("이력서4")
-					.file("파일")
 					.build()
 			);
 
-			JwtUser jwtUser = JwtUser.builder()
-				.id(1L)
-				.role(Role.USER)
+			var uploadCommand = ResumeCommand.CreateByUpload.builder()
+				.name("이력서4")
+				.file("파일")
 				.build();
 
-			commands.forEach(command -> {
-				Resume resume = null;
-				if (command instanceof ResumeCommand.CreateByNew) {
-					resume = Resume.create((ResumeCommand.CreateByNew) command, jwtUser);
-				} else if (command instanceof ResumeCommand.CreateByUpload) {
-					resume = Resume.create((ResumeCommand.CreateByUpload) command, jwtUser);
-				} else {
-					throw new IllegalArgumentException("지원하지 않는 타입입니다.");
-				}
-				resumeRepository.save(resume);
-			});
+			newCommands.stream()
+				.map(command -> Resume.create(command, user))
+				.map(resumeRepository::save)
+				.forEach(resumes::add);
 
-			JwtUser notUser = JwtUser.builder()
-				.id(2L)
-				.role(Role.USER)
-				.build();
+			resumeRepository.save(Resume.create(uploadCommand, user));
+
+			UserCommand.CreateByEmail notUserCommand = new UserCommand.CreateByEmail("not_user@abc.def", "password",
+				new GithubAccount());
+
+			User notUser = userRepository.save(User.create(userCommand));
 
 			// when, then
-			assertThatThrownBy(() -> resumeService.getResume(notUser, 1L))
+			assertThatThrownBy(() -> resumeService.getResume(notUser.getId(), 1L))
 				.isInstanceOf(IllegalArgumentException.class)
 				.hasMessage("해당 이력서를 찾을 수 없습니다.");
 		}

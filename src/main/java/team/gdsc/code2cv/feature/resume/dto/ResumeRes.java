@@ -8,6 +8,7 @@ import team.gdsc.code2cv.feature.resume.domain.career.Career;
 import team.gdsc.code2cv.feature.resume.domain.certification.Certification;
 import team.gdsc.code2cv.feature.resume.domain.education.Education;
 import team.gdsc.code2cv.feature.resume.entity.Resume;
+import team.gdsc.code2cv.feature.user.entity.User;
 
 public class ResumeRes {
 	@Builder
@@ -32,7 +33,7 @@ public class ResumeRes {
 	@Builder
 	public record ResumeDetailDto(
 		Long id,
-		Long userId,
+		User user,
 		String name,
 		Boolean isDone,
 		Boolean isDefault,
@@ -45,7 +46,7 @@ public class ResumeRes {
 		public static ResumeDetailDto from(Resume resume) {
 			return ResumeDetailDto.builder()
 				.id(resume.getId())
-				.userId(resume.getUserId())
+				.user(resume.getUser())
 				.name(resume.getName())
 				.isDone(resume.getIsDone())
 				.isDefault(resume.getIsDefault())
