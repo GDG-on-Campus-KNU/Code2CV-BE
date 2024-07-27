@@ -5,9 +5,12 @@ import java.util.List;
 
 import jakarta.persistence.Convert;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -23,7 +26,7 @@ import team.gdsc.code2cv.feature.resume.domain.certification.CertificationListCo
 import team.gdsc.code2cv.feature.resume.domain.education.Education;
 import team.gdsc.code2cv.feature.resume.domain.education.EducationListConverter;
 import team.gdsc.code2cv.feature.resume.dto.ResumeReq;
-import team.gdsc.code2cv.global.jwt.JwtUser;
+import team.gdsc.code2cv.feature.user.entity.User;
 import team.gdsc.code2cv.global.repository.BaseTimeEntity;
 
 @Entity
@@ -36,7 +39,9 @@ public class Resume extends BaseTimeEntity {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 
-	private Long userId;
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "user_id")
+	private User user;
 
 	private String name;
 
@@ -68,9 +73,9 @@ public class Resume extends BaseTimeEntity {
 		this.educations = request.educations();
 	}
 
-	public static Resume create(ResumeReq.CreateByNewRequest request, JwtUser jwtUser) {
+	public static Resume create(ResumeReq.CreateByNewRequest request, User user) {
 		return Resume.builder()
-			.userId(jwtUser.getId())
+			.user(user)
 			.name(request.name())
 			.isDone(request.isDone())
 			.isDefault(false)
@@ -82,9 +87,9 @@ public class Resume extends BaseTimeEntity {
 			.build();
 	}
 
-	public static Resume create(ResumeReq.CreateByUploadRequest request, JwtUser jwtUser) {
+	public static Resume create(ResumeReq.CreateByUploadRequest request, User user) {
 		return Resume.builder()
-			.userId(jwtUser.getId())
+			.user(user)
 			.name(request.name())
 			.isDone(true)
 			.isDefault(false)
@@ -96,9 +101,9 @@ public class Resume extends BaseTimeEntity {
 			.build();
 	}
 
-	public static Resume create(ResumeCommand.CreateByNew command, JwtUser jwtUser) {
+	public static Resume create(ResumeCommand.CreateByNew command, User user) {
 		return Resume.builder()
-			.userId(jwtUser.getId())
+			.user(user)
 			.name(command.getName())
 			.isDone(command.getIsDone())
 			.isDefault(false)
@@ -107,9 +112,9 @@ public class Resume extends BaseTimeEntity {
 
 	}
 
-	public static Resume create(ResumeCommand.CreateByUpload command, JwtUser jwtUser) {
+	public static Resume create(ResumeCommand.CreateByUpload command, User user) {
 		return Resume.builder()
-			.userId(jwtUser.getId())
+			.user(user)
 			.name(command.getName())
 			.isDone(true)
 			.isDefault(false)
