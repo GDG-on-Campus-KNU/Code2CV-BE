@@ -10,16 +10,21 @@ import team.gdsc.code2cv.feature.resume.dto.ResumeReq;
 import team.gdsc.code2cv.feature.resume.dto.ResumeRes;
 import team.gdsc.code2cv.feature.resume.entity.Resume;
 import team.gdsc.code2cv.feature.resume.repository.ResumeRepository;
-import team.gdsc.code2cv.global.jwt.JwtUser;
+import team.gdsc.code2cv.feature.user.entity.User;
+import team.gdsc.code2cv.feature.user.repository.UserRepository;
 
 @Service
 @RequiredArgsConstructor
 public class ResumeService {
+	private final UserRepository userRepository;
 	private final ResumeRepository resumeRepository;
 
 	@Transactional(readOnly = true)
-	public List<ResumeRes.ResumeDto> getAllResumes(JwtUser jwtUser) {
-		List<Resume> resumes = resumeRepository.findAllByUserId(jwtUser.getId());
+	public List<ResumeRes.ResumeDto> getAllResumes(Long userId) {
+		// 유저 확인 후 존재하지 않으면 예외 발생
+		User user = userRepository.findByIdOrThrow(userId);
+
+		List<Resume> resumes = resumeRepository.findAllByUser(user);
 
 		return resumes.stream()
 			.map(ResumeRes.ResumeDto::from)
@@ -27,27 +32,39 @@ public class ResumeService {
 	}
 
 	@Transactional(readOnly = true)
-	public ResumeRes.ResumeDetailDto getResume(JwtUser jwtUser, Long resumeId) {
-		Resume resume = resumeRepository.findByIdAndUserId(resumeId, jwtUser.getId())
+	public ResumeRes.ResumeDetailDto getResume(Long userId, Long resumeId) {
+		// 유저 확인 후 존재하지 않으면 예외 발생
+		User user = userRepository.findByIdOrThrow(userId);
+
+		Resume resume = resumeRepository.findByIdAndUser(resumeId, user)
 			.orElseThrow(() -> new IllegalArgumentException("해당 이력서를 찾을 수 없습니다."));
 
 		return ResumeRes.ResumeDetailDto.from(resume);
 	}
 
-	public ResumeRes.ResumeDto createResume(JwtUser jwtUser, ResumeReq.CreateByNewRequest request) {
-		Resume resume = resumeRepository.save(Resume.create(request, jwtUser));
+	public ResumeRes.ResumeDto createResume(Long userId, ResumeReq.CreateByNewRequest request) {
+		// 유저 확인 후 존재하지 않으면 예외 발생
+		User user = userRepository.findByIdOrThrow(userId);
+
+		Resume resume = resumeRepository.save(Resume.create(request, user));
 
 		return ResumeRes.ResumeDto.from(resume);
 	}
 
-	public ResumeRes.ResumeDto uploadResume(JwtUser jwtUser, ResumeReq.CreateByUploadRequest request) {
-		Resume resume = resumeRepository.save(Resume.create(request, jwtUser));
+	public ResumeRes.ResumeDto uploadResume(Long userId, ResumeReq.CreateByUploadRequest request) {
+		// 유저 확인 후 존재하지 않으면 예외 발생
+		User user = userRepository.findByIdOrThrow(userId);
+
+		Resume resume = resumeRepository.save(Resume.create(request, user));
 
 		return ResumeRes.ResumeDto.from(resume);
 	}
 
-	public ResumeRes.ResumeDto updateResume(JwtUser jwtUser, Long resumeId, ResumeReq.UpdateRequest request) {
-		Resume resume = resumeRepository.findByIdAndUserId(resumeId, jwtUser.getId())
+	public ResumeRes.ResumeDto updateResume(Long userId, Long resumeId, ResumeReq.UpdateRequest request) {
+		// 유저 확인 후 존재하지 않으면 예외 발생
+		User user = userRepository.findByIdOrThrow(userId);
+
+		Resume resume = resumeRepository.findByIdAndUser(resumeId, user)
 			.orElseThrow(() -> new IllegalArgumentException("해당 이력서를 찾을 수 없습니다."));
 
 		resume.update(request);
