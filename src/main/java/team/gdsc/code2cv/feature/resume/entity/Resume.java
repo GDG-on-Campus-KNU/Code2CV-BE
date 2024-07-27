@@ -3,6 +3,7 @@ package team.gdsc.code2cv.feature.resume.entity;
 import java.util.Collections;
 import java.util.List;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Convert;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -51,15 +52,19 @@ public class Resume extends BaseTimeEntity {
 
 	private String file;
 
+	@Column(length = 1000)
 	@Convert(converter = CareerListConverter.class)
 	private List<Career> careers;
 
+	@Column(length = 1000)
 	@Convert(converter = ActivityListConverter.class)
 	private List<Activity> activities;
 
+	@Column(length = 1000)
 	@Convert(converter = CertificationListConverter.class)
 	private List<Certification> certifications;
 
+	@Column(length = 1000)
 	@Convert(converter = EducationListConverter.class)
 	private List<Education> educations;
 
