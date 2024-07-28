@@ -56,7 +56,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 		 *
 		 * 성공시 AuthenticationSuccessHandler, 실패시 AuthenticationFailureHandler를 호출한다.
 		 */
-		if (jwtProvider.validateToken(rawToken)) {
+		if (jwtProvider.validateToken(rawToken, true)) {
 			JwtUser jwtUser = jwtProvider.getJwtUser(rawToken);
 			Authentication authentication = new UsernamePasswordAuthenticationToken(jwtUser, null,
 				jwtUser.getAuthorities());

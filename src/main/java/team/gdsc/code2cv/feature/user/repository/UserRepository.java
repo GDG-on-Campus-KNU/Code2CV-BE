@@ -1,14 +1,23 @@
 package team.gdsc.code2cv.feature.user.repository;
 
+import java.util.NoSuchElementException;
 import java.util.Optional;
 
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.stereotype.Repository;
 
 import team.gdsc.code2cv.feature.user.entity.User;
 
-@Repository
+
 public interface UserRepository extends JpaRepository<User, Long> {
 
-	Optional<User> findByUserToken(String userToken);
+	default User findByIdOrThrow(Long id) {
+		return findById(id).orElseThrow(NoSuchElementException::new);
+	}
+	Optional<User> findByEmail(String email);
+
+	boolean existsByEmail(String email);
+
+	boolean existsByGithubAccountGithubId(Long githubId);
+
+	Optional<User> findByGithubAccountGithubId(Long githubId);
 }

@@ -1,83 +1,77 @@
 package team.gdsc.code2cv.feature.project.entity;
 
-import java.util.List;
-import java.util.stream.Stream;
+import java.time.LocalDateTime;
 
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import team.gdsc.code2cv.feature.project.domain.ProjectCreate;
-import team.gdsc.code2cv.feature.project.domain.Tech;
+import team.gdsc.code2cv.feature.project.domain.ProjectCommand;
+import team.gdsc.code2cv.feature.user.entity.User;
 
-@Entity
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@Builder
 @Getter
+@Entity
+@AllArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Project {
-
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@Id @GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 
-	private String url;
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "user_id")
+	private User user;
 
-	private String name;
-
-	private String techs;
-
-	private Integer stars;
-
-	private Integer contributors;
-
-	private Integer forks;
-
-	private Integer commits;
+	private Long repoId;
+	private String repoName;
+	private String description;
+	private String htmlUrl;
+	private Integer forksCount;
+	private Integer starsCount;
+	private LocalDateTime repoCreatedAt;
+	private LocalDateTime repoUpdatedAt;
+	private String language;
 
 
-	private static final String TECHS_DELIMITER = ",";
-	private static final String EMPTY_TECHS = "EMPTY";
 
-	/**
-	 * 내부 String으로 비정규화된 기술들을 List로 변환하여 반환
-	 */
-	public List<Tech> getTechs() {
-		if(techs.equals(EMPTY_TECHS)) // [EMPTY_TECHS]는 빈 List로 반환
-			return List.of();
-
-		return Stream.of(techs.split(TECHS_DELIMITER))
-			.map(Tech::valueOf)
-			.toList();
+	public String getRepo(){
+		return htmlUrl.split("/")[4];
 	}
 
-	@Builder
-	private Project(String url, String name, List<Tech> techs, Integer stars, Integer contributors, Integer forks,
-		Integer commits) {
-		this.url = url;
-		this.name = name;
-		this.techs = techs.stream()
-			.map(Tech::name)
-			.reduce((a, b) -> a + TECHS_DELIMITER + b)
-			.orElse(EMPTY_TECHS);
-		this.stars = stars;
-		this.contributors = contributors;
-		this.forks = forks;
-		this.commits = commits;
+	public String getOwner(){
+		return htmlUrl.split("/")[3];
 	}
 
-	public static Project create(ProjectCreate command) {
+	public static Project create(ProjectCommand.Create command, User user){
 		return Project.builder()
-			.url(command.getUrl())
-			.name(command.getName())
-			.techs(command.getTechs())
-			.stars(command.getStars())
-			.contributors(command.getContributors())
-			.forks(command.getForks())
-			.commits(command.getCommits())
+			.user(user)
+			.repoId(command.getRepoId())
+			.repoName(command.getRepoName())
+			.description(command.getDescription())
+			.htmlUrl(command.getHtmlUrl())
+			.forksCount(command.getForksCount())
+			.starsCount(command.getStarsCount())
+			.repoCreatedAt(command.getRepoCreatedAt())
+			.repoUpdatedAt(command.getRepoUpdatedAt())
+			.language(command.getLanguage())
 			.build();
 	}
 
+	public void update(ProjectCommand.Update command){
+		this.repoName = command.getRepoName();
+		this.description = command.getDescription();
+		this.htmlUrl = command.getHtmlUrl();
+		this.forksCount = command.getForksCount();
+		this.starsCount = command.getStarsCount();
+		this.repoUpdatedAt = command.getRepoUpdatedAt();
+		this.language = command.getLanguage();
+	}
 }
