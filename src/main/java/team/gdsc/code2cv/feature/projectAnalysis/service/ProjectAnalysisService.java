@@ -30,14 +30,15 @@ public class ProjectAnalysisService {
 		//예외 처리 추가
 		User user = userRepository.findById(userId).orElseThrow();
 		Project project = projectRepository.findById(projectId).orElseThrow();
-		List<String> commitsSha = getCommitsSha(user.getGithubAccessToken(), project.getOwner(), project.getRepo());
+		List<String> commitsSha = getHostCommitsSha(user.getGithubAccessToken(), project.getOwner(), project.getRepo(), user.getGithubAccount().getGithubUsername());
 		// TODO: AI 분석 API 호출
 		return;
 	}
 
-	private List<String> getCommitsSha(String token, String owner, String repo) {
+	private List<String> getHostCommitsSha(String token, String owner, String repo,String authorName) {
 		return githubAnalysisClient.getAllCommitSha(token, owner, repo)
 			.flatMap(java.util.List::stream)
+			.filter(commit -> authorName.equals(commit.commit().author().name()))
 			.map(GithubCommitInfoModel::sha)
 			.toList();
 	}
