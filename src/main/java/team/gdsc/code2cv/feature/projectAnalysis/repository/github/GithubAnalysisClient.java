@@ -8,6 +8,7 @@ import org.springframework.stereotype.Repository;
 
 import lombok.RequiredArgsConstructor;
 import team.gdsc.code2cv.global.client.github.GithubRestApiClient;
+import team.gdsc.code2cv.global.client.github.response.GithubCommitDetailInfoModel;
 import team.gdsc.code2cv.global.client.github.response.GithubCommitInfoModel;
 
 @Repository
@@ -27,5 +28,12 @@ public class GithubAnalysisClient {
 			))
 			.map(HttpEntity::getBody)
 			.takeWhile(response -> !response.isEmpty());
+	}
+
+	/*
+	 * 특정 커밋의 상세 정보를 가져온다.
+	 */
+public GithubCommitDetailInfoModel getCommitDetails(String token, String owner, String repo, String sha) {
+		return githubRestApiClient.getCommitDetails("Bearer " + token, owner, repo, sha).getBody();
 	}
 }
