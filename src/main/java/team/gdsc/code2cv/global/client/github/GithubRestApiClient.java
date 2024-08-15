@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.service.annotation.GetExchange;
 import org.springframework.web.service.annotation.HttpExchange;
 
+import team.gdsc.code2cv.global.client.github.response.GithubCommitDetailInfoModel;
 import team.gdsc.code2cv.global.client.github.response.GithubCommitInfoModel;
 import team.gdsc.code2cv.global.client.github.response.GithubRepositoryInfoModel;
 import team.gdsc.code2cv.global.client.github.response.GithubUserInfoModel;
@@ -40,5 +41,13 @@ public interface GithubRestApiClient {
 		@PathVariable("repo") String repo,
 		@RequestParam(value = "per_page", defaultValue = "30") int perPage,
 		@RequestParam(value = "page", defaultValue = "1") int page
+	);
+
+	@GetExchange("/repos/{owner}/{repo}/commits/{sha}")
+	ResponseEntity<GithubCommitDetailInfoModel> getCommitDetails(
+		@RequestHeader("Authorization") String token,
+		@PathVariable("owner") String owner,
+		@PathVariable("repo") String repo,
+		@PathVariable("sha") String sha
 	);
 }

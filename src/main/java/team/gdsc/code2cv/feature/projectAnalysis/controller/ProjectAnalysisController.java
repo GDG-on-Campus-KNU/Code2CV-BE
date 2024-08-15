@@ -27,7 +27,6 @@ public class ProjectAnalysisController {
 		@AuthenticationPrincipal JwtUser jwtUser,
 		@PathVariable Long projectId
 	) {
-		projectAnalysisService.analyzeProject(projectId, jwtUser.getId());
-		throw new UnsupportedOperationException("아직 구현되지 않았습니다.");
+		return ResponseEntity.ok( projectAnalysisService.analyzeProject(projectId, jwtUser.getId()));
 	}
 }

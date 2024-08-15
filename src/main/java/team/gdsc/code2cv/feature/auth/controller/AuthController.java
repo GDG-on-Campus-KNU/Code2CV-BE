@@ -46,5 +46,4 @@ public class AuthController {
 		return authService.emailLogin(req);
 	}
 
-
 }
